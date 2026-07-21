@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -66,6 +67,22 @@ export function DraggableTodoRow({
     zIndex: isDragging.value ? 10 : 0,
     opacity: isDragging.value ? 0.85 : 1,
   }));
+
+  if (Platform.OS === 'web') {
+    // Drag-to-reassign is skipped on web: react-native-gesture-handler's Pan
+    // detector blocks native touch-scroll on the whole list there. Reassign
+    // a folder via the task's own edit screen instead.
+    return (
+      <TodoRow
+        todo={todo}
+        onToggle={onToggle}
+        onPress={onPress}
+        onToggleNow={onToggleNow}
+        folderLabel={folderLabel}
+        justCompleted={justCompleted}
+      />
+    );
+  }
 
   return (
     <GestureDetector gesture={pan}>

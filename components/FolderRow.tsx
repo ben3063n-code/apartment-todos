@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -130,19 +130,31 @@ export function FolderRow({
       ) : (
         <View style={styles.chevronWrap} />
       )}
-      <GestureDetector gesture={pan}>
-        <Pressable style={styles.main} onPress={guardedOnPress}>
+      {Platform.OS === 'web' ? (
+        // Drag-to-reorder is skipped on web: react-native-gesture-handler's Pan
+        // detector blocks native touch-scroll on the whole sidebar there.
+        <Pressable style={styles.main} onPress={onPress} onLongPress={onLongPress}>
           <Text style={styles.icon}>{folder.emoji}</Text>
-          <Text
-            style={[styles.title, { color: colors.text }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={[styles.title, { color: colors.text }]} numberOfLines={1} ellipsizeMode="tail">
             {folder.name}
           </Text>
           {folder.locked && <Text style={styles.lockIcon}>🔒</Text>}
         </Pressable>
-      </GestureDetector>
+      ) : (
+        <GestureDetector gesture={pan}>
+          <Pressable style={styles.main} onPress={guardedOnPress}>
+            <Text style={styles.icon}>{folder.emoji}</Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {folder.name}
+            </Text>
+            {folder.locked && <Text style={styles.lockIcon}>🔒</Text>}
+          </Pressable>
+        </GestureDetector>
+      )}
       {showActions && (
         <>
           <Pressable hitSlop={8} onPress={onEdit} style={styles.action}>
