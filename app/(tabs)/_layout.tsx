@@ -45,7 +45,9 @@ export default function TabsLayout() {
         name="settings"
         options={{
           title: t('tabs.settings'),
-          tabBarButton: (props) => <TabBarButton {...props} label="⚙️" iconOnly />,
+          tabBarButton: (props) => (
+            <TabBarButton {...props} label={t('tabs.settings')} imageSource={require('../../assets/settings-icon.png')} />
+          ),
         }}
       />
     </Tabs>
