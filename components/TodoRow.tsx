@@ -83,14 +83,14 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, paddingVertical: 12, borderBottomWidth: 1 },
-  checkboxWrap: { paddingTop: 2 },
-  checkbox: { width: 20, height: 20, borderRadius: 6, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  checkboxMark: { fontSize: 13, fontWeight: '700', lineHeight: 14 },
-  content: { flex: 1, gap: 6 },
-  title: { fontSize: 16 },
-  badgeRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6 },
-  dueDate: { fontSize: 12 },
-  folderLabel: { fontSize: 11, fontStyle: 'italic' },
-  starWrap: { paddingTop: 2, paddingHorizontal: 2 },
+  row: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 8, borderBottomWidth: 1 },
+  checkboxWrap: { paddingTop: 1 },
+  checkbox: { width: 19, height: 19, borderRadius: 6, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  checkboxMark: { fontSize: 12, fontWeight: '700', lineHeight: 13 },
+  content: { flex: 1, gap: 3 },
+  title: { fontSize: 15 },
+  badgeRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 5 },
+  dueDate: { fontSize: 11 },
+  folderLabel: { fontSize: 10, fontStyle: 'italic' },
+  starWrap: { paddingTop: 1, paddingHorizontal: 2 },
 });

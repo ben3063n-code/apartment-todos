@@ -9,7 +9,8 @@ export function useAppTheme() {
   const brightness = useStore((state) => state.brightness);
   const accentColor = useStore((state) => state.accentColor);
 
-  const scheme = preference === 'auto' ? systemScheme ?? 'light' : preference;
+  const resolvedSystemScheme = systemScheme === 'dark' ? 'dark' : 'light';
+  const scheme = preference === 'auto' ? resolvedSystemScheme : preference;
   const colors = buildTheme(scheme, brightness, accentColor);
 
   return { scheme, colors, preference };

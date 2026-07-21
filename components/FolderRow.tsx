@@ -157,10 +157,10 @@ export function FolderRow({
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingRight: 6, gap: 2, borderRadius: 8 },
-  chevronWrap: { width: 14, alignItems: 'center', justifyContent: 'center' },
-  main: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6, minWidth: 0 },
-  icon: { fontSize: 13 },
-  title: { fontSize: 13, fontWeight: '600', flexShrink: 1 },
-  action: { paddingHorizontal: 4, paddingVertical: 4 },
+  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, paddingRight: 6, gap: 2, borderRadius: 8, minHeight: 44 },
+  chevronWrap: { width: 20, alignItems: 'center', justifyContent: 'center' },
+  main: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, minWidth: 0 },
+  icon: { fontSize: 14 },
+  title: { fontSize: 14, fontWeight: '600', flexShrink: 1 },
+  action: { paddingHorizontal: 8, paddingVertical: 8 },
 });

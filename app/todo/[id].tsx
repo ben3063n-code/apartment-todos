@@ -127,7 +127,7 @@ export default function TodoModal() {
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.dueDateLabel')}</Text>
       <DueDateField
         value={dueDate}
-        onChange={(next) => {
+        onChange={(next: string | null) => {
           setDueDate(next);
           if (!next) {
             setDueTime(null);

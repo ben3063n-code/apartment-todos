@@ -8,9 +8,13 @@
     "scheme": "apartmenttodos",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ben3063n.todocreator",
+      "buildNumber": "1"
     },
     "android": {
+      "package": "com.ben3063n.todocreator",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -28,7 +32,8 @@
       "expo-localization",
       "@react-native-community/datetimepicker",
       "expo-notifications",
-      "expo-sharing"
+      "expo-sharing",
+      "expo-document-picker"
     ],
     "experiments": {
       "typedRoutes": true

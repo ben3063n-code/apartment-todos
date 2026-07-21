@@ -7,8 +7,8 @@ type Props = {
   label: string;
   iconOnly?: boolean;
   imageSource?: ImageSourcePropType;
-  onPress?: (e: GestureResponderEvent) => void;
-  onLongPress?: (e: GestureResponderEvent) => void;
+  onPress?: ((e: GestureResponderEvent) => void) | null;
+  onLongPress?: ((e: GestureResponderEvent) => void) | null;
   'aria-selected'?: boolean;
   testID?: string;
 };
