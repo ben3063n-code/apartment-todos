@@ -118,14 +118,14 @@ export function FolderRow({
       ref={registerRef}
       style={[
         styles.row,
-        { paddingLeft: 4 + Math.min(depth, 4) * 14 },
+        { paddingLeft: 4 + Math.min(depth, 4) * 16 },
         selected && { backgroundColor: colors.surfaceAlt },
         animatedStyle,
       ]}
     >
       {hasChildren ? (
         <Pressable hitSlop={8} onPress={onToggleExpand} style={styles.chevronWrap}>
-          <Text style={{ color: colors.textMuted, fontSize: 10 }}>{expanded ? '▾' : '▸'}</Text>
+          <Text style={{ color: colors.text, fontSize: 13, fontWeight: '700' }}>{expanded ? '▾' : '▸'}</Text>
         </Pressable>
       ) : (
         <View style={styles.chevronWrap} />
@@ -162,5 +162,5 @@ const styles = StyleSheet.create({
   main: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, minWidth: 0 },
   icon: { fontSize: 14 },
   title: { fontSize: 14, fontWeight: '600', flexShrink: 1 },
-  action: { paddingHorizontal: 8, paddingVertical: 8 },
+  action: { paddingHorizontal: 4, paddingVertical: 8 },
 });

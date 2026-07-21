@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   fabLeft: { left: 16 },
   fabRight: { right: 16 },
-  fabPlus: { fontSize: 26, fontWeight: '400', lineHeight: 28 },
+  fabPlus: { fontSize: 26, fontWeight: '400', lineHeight: 28, marginTop: -6 },
   searchBar: {
     position: 'absolute',
     left: 84,

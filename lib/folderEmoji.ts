@@ -33,6 +33,7 @@ const EMOJI_RULES: { emoji: string; keywords: string[] }[] = [
     keywords: ['book', 'bücher', 'bucher', 'livre', 'libro', 'libri', '书', '本', 'ブックリスト'],
   },
   { emoji: '🛒', keywords: ['shopping', 'groceries', 'einkaufen', 'courses', 'achats', 'spesa', '购物', '買い物'] },
+  { emoji: '📖', keywords: ['recipe', 'rezept', 'recette', 'ricetta', '食谱', 'レシピ'] },
   { emoji: '💰', keywords: ['finance', 'bills', 'geld', 'rechnungen', 'factures', 'bollette', '财务', '账单', '請求書'] },
   {
     emoji: '🩺',

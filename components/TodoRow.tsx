@@ -36,7 +36,9 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
 
   const animatedStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
 
-  const titleColor = justCompleted ? colors.accent : colors.text;
+  const permanentlyDone = todo.done && !justCompleted;
+  const titleColor = justCompleted ? colors.accent : permanentlyDone ? colors.textMuted : colors.text;
+  const checkboxColor = justCompleted ? colors.accent : permanentlyDone ? colors.textMuted : colors.text;
 
   return (
     <AnimatedPressable style={[styles.row, { borderBottomColor: colors.border }, animatedStyle]} onPress={onPress}>
@@ -44,8 +46,8 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
         <View
           style={[
             styles.checkbox,
-            { borderColor: titleColor },
-            todo.done && { backgroundColor: titleColor },
+            { borderColor: checkboxColor },
+            todo.done && { backgroundColor: checkboxColor },
           ]}
         >
           {todo.done && (
@@ -56,7 +58,15 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
         </View>
       </Pressable>
       <View style={styles.content}>
-        <Text style={[styles.title, { color: titleColor }]}>{todo.title}</Text>
+        <Text
+          style={[
+            styles.title,
+            { color: titleColor },
+            permanentlyDone && styles.titleDone,
+          ]}
+        >
+          {todo.title}
+        </Text>
         <View style={styles.badgeRow}>
           <PriorityBadge priority={todo.priority} />
           {todo.dueDate && (
@@ -89,6 +99,7 @@ const styles = StyleSheet.create({
   checkboxMark: { fontSize: 12, fontWeight: '700', lineHeight: 13 },
   content: { flex: 1, gap: 3 },
   title: { fontSize: 15 },
+  titleDone: { textDecorationLine: 'line-through' },
   badgeRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 5 },
   dueDate: { fontSize: 11 },
   folderLabel: { fontSize: 10, fontStyle: 'italic' },

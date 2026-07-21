@@ -3,12 +3,13 @@ export default {
     cancel: '取消',
     delete: '删除',
     undo: '撤销',
+    done: '完成',
   },
   tabs: {
     folders: '文件夹',
     completed: '已完成',
     settings: '设置',
-    now: 'Now',
+    now: '专注',
     trash: '回收站',
   },
   trash: {
@@ -81,6 +82,10 @@ export default {
     todoCount_other: '{{count}} 个任务',
     deleteConfirmMessage: '这将永久删除 {{subfolders}} 和 {{todos}}。',
     deletedToast: '已删除"{{name}}"',
+    kindLabel: '文件夹类型',
+    kind: { tasks: '任务', list: '清单' },
+    kindHintTasks: '会显示在"所有待办"中。',
+    kindHintList: '适用于书单、点子等清单——不会显示在"所有待办"中。',
   },
   allTodos: {
     sort: { priority: '优先级', dueDate: '截止日期', createdAt: '创建时间', folderName: '文件夹' },
@@ -107,6 +112,8 @@ export default {
   now: {
     emptyState: '还没有任务在此。点击任务上的星标即可添加到这里。',
     focusHint: '保持专注——尽量让这份清单简短。',
+    focusLabel: '当前焦点',
+    endSessionButton: '结束专注会话',
     timeBudgetSubtitle_one: '共 {{count}} 项任务',
     timeBudgetSubtitle_other: '共 {{count}} 项任务',
     timeBudgetUnestimated_one: '{{count}} 项任务未设置时间',
@@ -116,6 +123,8 @@ export default {
     minutesOnly: '{{count}} 分钟',
     hoursOnly: '{{count}} 小时',
     hoursAndMinutes: '{{hours}} 小时 {{minutes}} 分钟',
+    hoursUnit: '小时',
+    minutesUnit: '分钟',
   },
   settings: {
     appearanceLabel: '外观',

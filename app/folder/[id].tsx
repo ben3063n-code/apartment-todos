@@ -3,8 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { FolderPicker } from '../../components/FolderPicker';
 import { confirmDestructive } from '../../lib/confirm';
 import { suggestFolderEmoji } from '../../lib/folderEmoji';
+import { FOLDER_KINDS, type FolderKind } from '../../lib/models';
 import { paramToFolderId } from '../../lib/routes';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
@@ -27,12 +29,13 @@ export default function FolderModal() {
 
   const isNew = params.id === 'new';
   const existing = isNew ? undefined : folders.find((f) => f.id === params.id);
-  const parentId = isNew ? paramToFolderId(params.parentId) : existing?.parentId ?? null;
-  const parentName = parentId ? folders.find((f) => f.id === parentId)?.name : null;
+  const initialParentId = isNew ? paramToFolderId(params.parentId) : existing?.parentId ?? null;
 
   const [name, setName] = useState(existing?.name ?? '');
   const [emoji, setEmoji] = useState(existing?.emoji ?? suggestFolderEmoji(''));
   const [emojiTouched, setEmojiTouched] = useState(false);
+  const [kind, setKind] = useState<FolderKind>(existing?.kind ?? 'tasks');
+  const [parentId, setParentId] = useState<string | null>(initialParentId);
 
   useEffect(() => {
     if (isNew && !emojiTouched) {
@@ -46,9 +49,9 @@ export default function FolderModal() {
     if (!canSave) return;
     const finalEmoji = emoji.trim() || suggestFolderEmoji(name);
     if (isNew) {
-      addFolder(name.trim(), parentId, finalEmoji);
+      addFolder(name.trim(), parentId, finalEmoji, kind);
     } else if (existing) {
-      updateFolder(existing.id, { name: name.trim(), emoji: finalEmoji });
+      updateFolder(existing.id, { name: name.trim(), emoji: finalEmoji, kind, parentId });
     }
     router.back();
   };
@@ -77,9 +80,12 @@ export default function FolderModal() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('folderModal.parentLabel')}</Text>
-      <Text style={[styles.readonlyValue, { color: colors.text }]}>
-        {parentName ?? t('todo.folderTopLevelOption')}
-      </Text>
+      <FolderPicker
+        value={parentId}
+        onChange={setParentId}
+        allowTopLevel
+        excludeIds={existing ? getDescendantFolderIds(existing.id) : []}
+      />
 
       <View style={styles.row}>
         <View style={styles.emojiField}>
@@ -92,6 +98,7 @@ export default function FolderModal() {
               setEmojiTouched(true);
             }}
             maxLength={4}
+            autoFocus={isNew}
           />
         </View>
         <View style={styles.nameField}>
@@ -102,10 +109,31 @@ export default function FolderModal() {
             onChangeText={setName}
             placeholder={t('folderModal.namePlaceholder')}
             placeholderTextColor={colors.textMuted}
-            autoFocus
           />
         </View>
       </View>
+
+      <Text style={[styles.label, { color: colors.textMuted }]}>{t('folderModal.kindLabel')}</Text>
+      <View style={[styles.kindSegmented, { borderColor: colors.border }]}>
+        {FOLDER_KINDS.map((option, index) => (
+          <Pressable
+            key={option}
+            style={[
+              styles.kindSegment,
+              index > 0 && { borderLeftWidth: 1, borderLeftColor: colors.border },
+              kind === option && { backgroundColor: colors.accent },
+            ]}
+            onPress={() => setKind(option)}
+          >
+            <Text style={{ color: kind === option ? colors.accentText : colors.text, fontSize: 14, fontWeight: '600' }}>
+              {t(`folderModal.kind.${option}`)}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+      <Text style={[styles.kindHint, { color: colors.textMuted }]}>
+        {kind === 'tasks' ? t('folderModal.kindHintTasks') : t('folderModal.kindHintList')}
+      </Text>
 
       <Pressable
         style={[styles.saveButton, { backgroundColor: canSave ? colors.accent : colors.surfaceAlt }]}
@@ -130,11 +158,13 @@ const styles = StyleSheet.create({
   container: { padding: 20, gap: 6, flex: 1 },
   label: { fontSize: 13, fontWeight: '600', textTransform: 'uppercase', marginTop: 14, marginBottom: 6 },
   input: { borderWidth: 1, borderRadius: 9, paddingHorizontal: 14, paddingVertical: 9, fontSize: 16 },
-  readonlyValue: { fontSize: 16, paddingVertical: 4 },
   row: { flexDirection: 'row', gap: 10 },
   emojiField: { width: 70 },
   emojiInput: { textAlign: 'center', fontSize: 20, paddingVertical: 6 },
   nameField: { flex: 1 },
+  kindSegmented: { flexDirection: 'row', borderRadius: 9, borderWidth: 1, overflow: 'hidden' },
+  kindSegment: { flex: 1, paddingVertical: 9, alignItems: 'center' },
+  kindHint: { fontSize: 12, marginTop: 6 },
   saveButton: { marginTop: 28, borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
   deleteButton: { marginTop: 16, alignItems: 'center', paddingVertical: 8 },
 });

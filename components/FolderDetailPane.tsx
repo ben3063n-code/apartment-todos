@@ -47,11 +47,17 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
     return map;
   }, [folders]);
 
+  const listKindFolderIds = useMemo(() => {
+    return new Set(folders.filter((f) => f.kind === 'list').map((f) => f.id));
+  }, [folders]);
+
   const visibleTodos = useMemo(() => {
     const isVisible = (todo: (typeof todos)[number]) =>
       (!todo.done || recentlyCompletedIds.has(todo.id)) && !todo.deletedAt;
     let filtered =
-      folderId === 'all' ? todos.filter(isVisible) : todos.filter((todo) => todo.folderId === folderId && isVisible(todo));
+      folderId === 'all'
+        ? todos.filter((todo) => isVisible(todo) && !listKindFolderIds.has(todo.folderId))
+        : todos.filter((todo) => todo.folderId === folderId && isVisible(todo));
 
     const query = searchQuery.trim().toLowerCase();
     if (query) {
@@ -82,7 +88,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
       }
       return b.createdAt.localeCompare(a.createdAt);
     });
-  }, [todos, folderId, sortField, folderNameById, recentlyCompletedIds, searchQuery]);
+  }, [todos, folderId, sortField, folderNameById, recentlyCompletedIds, searchQuery, listKindFolderIds]);
 
   if (folderId !== 'all' && !folder) {
     return (

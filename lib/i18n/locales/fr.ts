@@ -3,12 +3,13 @@ export default {
     cancel: 'Annuler',
     delete: 'Supprimer',
     undo: 'Annuler',
+    done: 'Terminé',
   },
   tabs: {
     folders: 'Dossiers',
     completed: 'Terminé',
     settings: 'Réglages',
-    now: 'Now',
+    now: 'Focus',
     trash: 'Corbeille',
   },
   trash: {
@@ -81,6 +82,10 @@ export default {
     todoCount_other: '{{count}} tâches',
     deleteConfirmMessage: 'Cela supprimera définitivement {{subfolders}} et {{todos}}.',
     deletedToast: '« {{name}} » supprimé',
+    kindLabel: 'Type de dossier',
+    kind: { tasks: 'Tâches', list: 'Liste' },
+    kindHintTasks: 'Apparaît dans « Tous les ToDos ».',
+    kindHintList: 'Pour des listes comme des livres ou des idées — n\'apparaît pas dans « Tous les ToDos ».',
   },
   allTodos: {
     sort: { priority: 'Priorité', dueDate: 'Échéance', createdAt: 'Créé', folderName: 'Dossier' },
@@ -107,6 +112,8 @@ export default {
   now: {
     emptyState: "Rien pour l'instant. Touchez l'étoile d'une tâche pour l'ajouter ici.",
     focusHint: 'Reste concentré — garde cette liste courte.',
+    focusLabel: 'En focus',
+    endSessionButton: 'Terminer la session',
     timeBudgetSubtitle_one: 'pour {{count}} tâche',
     timeBudgetSubtitle_other: 'pour {{count}} tâches',
     timeBudgetUnestimated_one: '{{count}} tâche sans estimation de temps',
@@ -116,6 +123,8 @@ export default {
     minutesOnly: '{{count}} min',
     hoursOnly: '{{count}} h',
     hoursAndMinutes: '{{hours}} h {{minutes}} min',
+    hoursUnit: 'h',
+    minutesUnit: 'min',
   },
   settings: {
     appearanceLabel: 'Apparence',

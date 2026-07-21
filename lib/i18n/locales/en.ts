@@ -3,12 +3,13 @@ export default {
     cancel: 'Cancel',
     delete: 'Delete',
     undo: 'Undo',
+    done: 'Done',
   },
   tabs: {
     folders: 'Folders',
     completed: 'Completed',
     settings: 'Settings',
-    now: 'Now',
+    now: 'Focus',
     trash: 'Trash',
   },
   trash: {
@@ -81,6 +82,10 @@ export default {
     todoCount_other: '{{count}} tasks',
     deleteConfirmMessage: 'This will permanently delete {{subfolders}} and {{todos}}.',
     deletedToast: '"{{name}}" deleted',
+    kindLabel: 'Folder type',
+    kind: { tasks: 'Tasks', list: 'List' },
+    kindHintTasks: 'Shows up in "All ToDos".',
+    kindHintList: "For lists like books or ideas — won't show up in \"All ToDos\".",
   },
   allTodos: {
     sort: { priority: 'Priority', dueDate: 'Due date', createdAt: 'Created', folderName: 'Folder' },
@@ -107,6 +112,8 @@ export default {
   now: {
     emptyState: 'Nothing queued yet. Tap the star on a task to add it here.',
     focusHint: 'Keep it focused — try to keep this list short.',
+    focusLabel: 'In Focus',
+    endSessionButton: 'End focus session',
     timeBudgetSubtitle_one: 'for {{count}} task',
     timeBudgetSubtitle_other: 'for {{count}} tasks',
     timeBudgetUnestimated_one: '{{count}} task without a time estimate',
@@ -116,6 +123,8 @@ export default {
     minutesOnly: '{{count}} min',
     hoursOnly: '{{count}} h',
     hoursAndMinutes: '{{hours}} h {{minutes}} min',
+    hoursUnit: 'h',
+    minutesUnit: 'min',
   },
   settings: {
     appearanceLabel: 'Appearance',

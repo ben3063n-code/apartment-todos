@@ -29,11 +29,16 @@ export const ACCENT_COLORS: AccentColor[] = [
   'teal',
 ];
 
+export type FolderKind = 'tasks' | 'list';
+
+export const FOLDER_KINDS: FolderKind[] = ['tasks', 'list'];
+
 export type Folder = {
   id: string;
   name: string;
   parentId: string | null;
   emoji: string;
+  kind: FolderKind;
   deletedAt: string | null;
 };
 
@@ -60,4 +65,3 @@ export type Todo = {
   deletedAt: string | null;
 };
 
-export const DURATION_OPTIONS: number[] = [15, 30, 45, 60, 90, 120, 180, 240];

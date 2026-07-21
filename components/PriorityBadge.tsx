@@ -11,13 +11,15 @@ export function PriorityBadge({ priority }: { priority: Priority | null }) {
   const color = colors.priority[priority];
 
   return (
-    <View style={[styles.badge, { backgroundColor: `${color}22`, borderColor: color }]}>
-      <Text style={[styles.text, { color }]}>{t(`todo.priority.${priority}`)}</Text>
+    <View style={styles.badge}>
+      <View style={[styles.dot, { backgroundColor: color }]} />
+      <Text style={[styles.text, { color: colors.textMuted }]}>{t(`todo.priority.${priority}`)}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  badge: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 8, borderWidth: 1 },
-  text: { fontSize: 11, fontWeight: '700' },
+  badge: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  dot: { width: 7, height: 7, borderRadius: 4 },
+  text: { fontSize: 11, fontWeight: '600' },
 });

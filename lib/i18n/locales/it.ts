@@ -3,12 +3,13 @@ export default {
     cancel: 'Annulla',
     delete: 'Elimina',
     undo: 'Annulla',
+    done: 'Fatto',
   },
   tabs: {
     folders: 'Cartelle',
     completed: 'Completate',
     settings: 'Impostazioni',
-    now: 'Now',
+    now: 'Focus',
     trash: 'Cestino',
   },
   trash: {
@@ -81,6 +82,10 @@ export default {
     todoCount_other: '{{count}} attività',
     deleteConfirmMessage: 'Verranno eliminati definitivamente {{subfolders}} e {{todos}}.',
     deletedToast: '"{{name}}" eliminata',
+    kindLabel: 'Tipo di cartella',
+    kind: { tasks: 'Attività', list: 'Elenco' },
+    kindHintTasks: 'Appare in "Tutti i ToDo".',
+    kindHintList: 'Per elenchi come libri o idee — non appare in "Tutti i ToDo".',
   },
   allTodos: {
     sort: { priority: 'Priorità', dueDate: 'Scadenza', createdAt: 'Creata', folderName: 'Cartella' },
@@ -107,6 +112,8 @@ export default {
   now: {
     emptyState: 'Ancora niente in coda. Tocca la stella su un’attività per aggiungerla qui.',
     focusHint: 'Resta concentrato — tieni questa lista breve.',
+    focusLabel: 'In evidenza',
+    endSessionButton: 'Termina la sessione',
     timeBudgetSubtitle_one: 'per {{count}} attività',
     timeBudgetSubtitle_other: 'per {{count}} attività',
     timeBudgetUnestimated_one: '{{count}} attività senza stima di tempo',
@@ -116,6 +123,8 @@ export default {
     minutesOnly: '{{count}} min',
     hoursOnly: '{{count}} h',
     hoursAndMinutes: '{{hours}} h {{minutes}} min',
+    hoursUnit: 'h',
+    minutesUnit: 'min',
   },
   settings: {
     appearanceLabel: 'Aspetto',

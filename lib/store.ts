@@ -11,6 +11,7 @@ import type {
   AccentColor,
   CompletionMark,
   Folder,
+  FolderKind,
   Language,
   Priority,
   Recurrence,
@@ -67,8 +68,8 @@ type Store = {
   setHasHydrated: (value: boolean) => void;
   seedDefaultData: () => void;
 
-  addFolder: (name: string, parentId: string | null, emoji: string) => string;
-  updateFolder: (id: string, patch: Partial<Pick<Folder, 'name' | 'emoji'>>) => void;
+  addFolder: (name: string, parentId: string | null, emoji: string, kind?: FolderKind) => string;
+  updateFolder: (id: string, patch: Partial<Pick<Folder, 'name' | 'emoji' | 'kind' | 'parentId'>>) => void;
   deleteFolder: (id: string) => void;
   restoreFolder: (id: string) => void;
   permanentlyDeleteFolder: (id: string) => void;
@@ -85,6 +86,7 @@ type Store = {
   restoreTodo: (id: string) => void;
   permanentlyDeleteTodo: (id: string) => void;
   emptyTrash: () => void;
+  endFocusSession: () => void;
 
   setThemePreference: (preference: ThemePreference) => void;
   setBrightness: (value: number) => void;
@@ -117,34 +119,66 @@ export const useStore = create<Store>()(
       seedDefaultData: () => {
         const resolvedLanguage = resolveLanguage(get().language);
         const data = getDefaultData(resolvedLanguage);
-        for (const name of data.folderNames) {
-          get().addFolder(name, null, suggestFolderEmoji(name));
-        }
+        const listFolderIndexes = new Set([6, 7]); // Ideas, Book List
+        const defaultFolderIds = data.folderNames.map((name, index) =>
+          get().addFolder(name, null, suggestFolderEmoji(name), listFolderIndexes.has(index) ? 'list' : 'tasks')
+        );
+
         const onboardingId = get().addFolder(data.onboardingFolderName, null, ONBOARDING_FOLDER_EMOJI);
-        const demoEstimatedMinutes: (number | null)[] = [null, 15, null, 30, 45, null];
-        const demoInNowList = [false, true, false, true, true, false];
-        const demoPriority: (Priority | null)[] = [null, 1, null, 3, 5, null];
-        data.onboardingTodos.forEach((title, index) => {
-          const todoId = get().addTodo({
+        for (const title of data.onboardingTodos) {
+          get().addTodo({
             title,
             folderId: onboardingId,
-            priority: demoPriority[index] ?? null,
+            priority: null,
             dueDate: null,
             dueTime: null,
             recurrence: null,
             reminderEnabled: false,
             reminderTime: null,
             notificationId: null,
-            estimatedMinutes: demoEstimatedMinutes[index] ?? null,
+            estimatedMinutes: 1,
           });
-          if (demoInNowList[index]) get().toggleInNow(todoId);
-        });
+        }
+
+        for (const task of data.focusDemoTasks) {
+          const todoId = get().addTodo({
+            title: task.title,
+            folderId: defaultFolderIds[task.folderIndex],
+            priority: task.priority,
+            dueDate: null,
+            dueTime: null,
+            recurrence: null,
+            reminderEnabled: false,
+            reminderTime: null,
+            notificationId: null,
+            estimatedMinutes: task.minutes,
+          });
+          get().toggleInNow(todoId);
+        }
+
+        const kitchenFolderId = defaultFolderIds[0];
+        for (const sub of data.kitchenSubfolders) {
+          const subfolderId = get().addFolder(sub.name, kitchenFolderId, suggestFolderEmoji(sub.name));
+          get().addTodo({
+            title: sub.todo,
+            folderId: subfolderId,
+            priority: null,
+            dueDate: null,
+            dueTime: null,
+            recurrence: null,
+            reminderEnabled: false,
+            reminderTime: null,
+            notificationId: null,
+            estimatedMinutes: null,
+          });
+        }
+
         set({ hasSeededDefaults: true, onboardingFolderId: onboardingId });
       },
 
-      addFolder: (name, parentId, emoji) => {
+      addFolder: (name, parentId, emoji, kind = 'tasks') => {
         const id = createId();
-        set((state) => ({ folders: [...state.folders, { id, name, parentId, emoji, deletedAt: null }] }));
+        set((state) => ({ folders: [...state.folders, { id, name, parentId, emoji, kind, deletedAt: null }] }));
         return id;
       },
 
@@ -348,6 +382,12 @@ export const useStore = create<Store>()(
         set((state) => ({
           folders: state.folders.filter((f) => !f.deletedAt),
           todos: state.todos.filter((t) => !t.deletedAt),
+        }));
+      },
+
+      endFocusSession: () => {
+        set((state) => ({
+          todos: state.todos.map((todo) => (todo.inNowList ? { ...todo, inNowList: false } : todo)),
         }));
       },
 

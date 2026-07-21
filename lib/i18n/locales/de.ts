@@ -3,12 +3,13 @@ export default {
     cancel: 'Abbrechen',
     delete: 'Löschen',
     undo: 'Rückgängig',
+    done: 'Fertig',
   },
   tabs: {
     folders: 'Ordner',
     completed: 'Erledigt',
     settings: 'Einstellungen',
-    now: 'Now',
+    now: 'Fokus',
     trash: 'Papierkorb',
   },
   trash: {
@@ -81,6 +82,10 @@ export default {
     todoCount_other: '{{count}} Aufgaben',
     deleteConfirmMessage: 'Dabei werden {{subfolders}} und {{todos}} unwiderruflich gelöscht.',
     deletedToast: '"{{name}}" gelöscht',
+    kindLabel: 'Ordnertyp',
+    kind: { tasks: 'Aufgaben', list: 'Liste' },
+    kindHintTasks: 'Erscheint in "Alle ToDos".',
+    kindHintList: 'Für Listen wie Bücher oder Ideen — erscheint nicht in "Alle ToDos".',
   },
   allTodos: {
     sort: { priority: 'Priorität', dueDate: 'Fällig', createdAt: 'Erstellt', folderName: 'Ordner' },
@@ -107,6 +112,8 @@ export default {
   now: {
     emptyState: 'Noch nichts vorgemerkt. Tippe auf den Stern bei einer Aufgabe.',
     focusHint: 'Bleib fokussiert — halte diese Liste kurz.',
+    focusLabel: 'Im Fokus',
+    endSessionButton: 'Fokussession beenden',
     timeBudgetSubtitle_one: 'für {{count}} Aufgabe',
     timeBudgetSubtitle_other: 'für {{count}} Aufgaben',
     timeBudgetUnestimated_one: '{{count}} Aufgabe ohne Zeitschätzung',
@@ -116,6 +123,8 @@ export default {
     minutesOnly: '{{count}} Min',
     hoursOnly: '{{count}} Std',
     hoursAndMinutes: '{{hours}} Std {{minutes}} Min',
+    hoursUnit: 'Std',
+    minutesUnit: 'Min',
   },
   settings: {
     appearanceLabel: 'Erscheinungsbild',
@@ -148,7 +157,7 @@ export default {
     title: 'So funktioniert die App',
     folders: { title: 'Ordner', body: 'Organisiere Aufgaben in beliebig tief verschachtelten Ordnern. Tippe links auf einen Ordner, um rechts seine Aufgaben zu sehen.' },
     allTodos: { title: 'Alle ToDos', body: 'Siehe alle Aufgaben aller Ordner an einem Ort. Ziehe eine Aufgabe auf einen Ordner in der Seitenleiste, um sie dorthin zu verschieben.' },
-    now: { title: 'Now', body: 'Markiere Aufgaben mit dem Stern, um sie in deine Arbeitsliste aufzunehmen. Die oberste Aufgabe erscheint als große Fokus-Karte.' },
+    now: { title: 'Fokus', body: 'Markiere Aufgaben mit dem Stern, um sie in deine Arbeitsliste aufzunehmen. Die oberste Aufgabe erscheint als Fokus-Karte.' },
     priority: { title: 'Priorität', body: 'Gib einer Aufgabe eine Priorität von Rot (sehr hoch) bis Grün (sehr niedrig) — oder lass sie einfach weg.' },
     dueDatesReminders: { title: 'Fälligkeitsdatum & Erinnerungen', body: 'Setze optional ein Fälligkeitsdatum und aktiviere eine Erinnerung, um eine lokale Benachrichtigung zu einer bestimmten Uhrzeit zu erhalten.' },
     recurrence: { title: 'Wiederholungen', body: 'Lege bei einer Aufgabe mit Fälligkeitsdatum eine Wiederholung fest (täglich/wöchentlich/monatlich/jährlich). Beim Abhaken wird automatisch die nächste Aufgabe mit neuem Datum angelegt.' },

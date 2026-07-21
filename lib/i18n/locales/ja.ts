@@ -3,12 +3,13 @@ export default {
     cancel: 'キャンセル',
     delete: '削除',
     undo: '元に戻す',
+    done: '完了',
   },
   tabs: {
     folders: 'フォルダ',
     completed: '完了',
     settings: '設定',
-    now: 'Now',
+    now: 'フォーカス',
     trash: 'ゴミ箱',
   },
   trash: {
@@ -81,6 +82,10 @@ export default {
     todoCount_other: '{{count}} 件のタスク',
     deleteConfirmMessage: '{{subfolders}}と{{todos}}が完全に削除されます。',
     deletedToast: '「{{name}}」を削除しました',
+    kindLabel: 'フォルダの種類',
+    kind: { tasks: 'タスク', list: 'リスト' },
+    kindHintTasks: '"すべてのToDo"に表示されます。',
+    kindHintList: '本やアイデアなどのリスト用――"すべてのToDo"には表示されません。',
   },
   allTodos: {
     sort: { priority: '優先度', dueDate: '期限', createdAt: '作成日', folderName: 'フォルダ' },
@@ -107,6 +112,8 @@ export default {
   now: {
     emptyState: 'まだ何もありません。タスクの星マークをタップしてここに追加しましょう。',
     focusHint: '集中しよう――このリストは短く保つのがコツ。',
+    focusLabel: 'フォーカス中',
+    endSessionButton: 'フォーカスセッションを終了',
     timeBudgetSubtitle_one: 'タスク {{count}} 件分',
     timeBudgetSubtitle_other: 'タスク {{count}} 件分',
     timeBudgetUnestimated_one: '時間未設定のタスク {{count}} 件',
