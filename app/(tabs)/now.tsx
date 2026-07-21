@@ -172,7 +172,7 @@ function FocusCard({ title, priority, estimatedMinutes, accentColor, onPress, on
           <Text style={{ color: '#f2b400', fontSize: 15 }}>★</Text>
         </Pressable>
       </View>
-      <Text style={[styles.focusTitle, { color: colors.text }]} numberOfLines={2}>
+      <Text style={[styles.focusTitle, { color: colors.text }]} numberOfLines={3}>
         {title}
       </Text>
       <View style={styles.focusMetaRow}>

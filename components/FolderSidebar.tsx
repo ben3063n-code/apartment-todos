@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { authenticateForFolder } from '../lib/folderAuth';
 import { flattenVisibleFolderTree } from '../lib/folderTree';
 import { useStore } from '../lib/store';
 import { useAppTheme } from '../lib/useAppTheme';
@@ -32,6 +33,8 @@ export function FolderSidebar({
   const folders = useStore((state) => state.folders);
   const onboardingFolderId = useStore((state) => state.onboardingFolderId);
   const reorderSiblings = useStore((state) => state.reorderSiblings);
+  const isFolderUnlocked = useStore((state) => state.isFolderUnlocked);
+  const unlockFolder = useStore((state) => state.unlockFolder);
   const [actionsForFolderId, setActionsForFolderId] = useState<string | null>(null);
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
@@ -79,6 +82,16 @@ export function FolderSidebar({
     reorderSiblings(dragged.parentId, newOrder);
   };
 
+  const handleSelectFolder = async (folder: { id: string; name: string; locked: boolean }) => {
+    setActionsForFolderId(null);
+    if (folder.locked && !isFolderUnlocked(folder.id)) {
+      const success = await authenticateForFolder(folder.name);
+      if (!success) return;
+      unlockFolder(folder.id);
+    }
+    onSelectFolder(folder.id);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.surface, borderRightColor: colors.border }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -108,10 +121,7 @@ export function FolderSidebar({
             showActions={actionsForFolderId === folder.id}
             hasChildren={hasChildren}
             expanded={expandedFolderIds.has(folder.id)}
-            onPress={() => {
-              setActionsForFolderId(null);
-              onSelectFolder(folder.id);
-            }}
+            onPress={() => handleSelectFolder(folder)}
             onLongPress={() => setActionsForFolderId((current) => (current === folder.id ? null : folder.id))}
             onToggleExpand={() => toggleExpanded(folder.id)}
             onEdit={() => {

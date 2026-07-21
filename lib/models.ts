@@ -39,6 +39,7 @@ export type Folder = {
   parentId: string | null;
   emoji: string;
   kind: FolderKind;
+  locked: boolean;
   deletedAt: string | null;
 };
 

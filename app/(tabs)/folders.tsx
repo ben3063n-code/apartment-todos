@@ -4,12 +4,15 @@ import { StyleSheet, View } from 'react-native';
 import { FolderDetailPane } from '../../components/FolderDetailPane';
 import { FolderFabRow } from '../../components/FolderFabRow';
 import { FolderSidebar } from '../../components/FolderSidebar';
+import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
 import { useFolderDropZones } from '../../lib/useFolderDropZones';
 
 export default function FoldersScreen() {
   const { colors } = useAppTheme();
-  const [selectedFolderId, setSelectedFolderId] = useState<string | 'all'>('all');
+  const [selectedFolderId, setSelectedFolderId] = useState<string | 'all'>(
+    () => useStore.getState().defaultFolderId
+  );
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const { registerFolderRowRef, measureDropZones, handleDrop, findZoneAt } = useFolderDropZones();

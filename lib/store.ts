@@ -61,20 +61,26 @@ type Store = {
   completionMark: CompletionMark;
   fadeOutDuration: number;
   allTodosSortField: SortField;
+  defaultFolderId: string | 'all';
   language: Language;
   showTodayBanner: boolean;
+  starOnLeft: boolean;
+  tabBarAccentColor: AccentColor | 'auto';
   hasHydrated: boolean;
   hasSeededDefaults: boolean;
   onboardingFolderId: string | null;
   isPro: boolean;
   focusSessionEndedMonth: string | null;
+  unlockedFolderIds: string[];
+  unlockFolder: (id: string) => void;
+  isFolderUnlocked: (id: string) => boolean;
   setHasHydrated: (value: boolean) => void;
   seedDefaultData: () => void;
   setIsPro: (value: boolean) => void;
   attemptToggleInNow: (id: string) => 'ok' | 'limit' | 'monthly';
 
   addFolder: (name: string, parentId: string | null, emoji: string, kind?: FolderKind) => string;
-  updateFolder: (id: string, patch: Partial<Pick<Folder, 'name' | 'emoji' | 'kind' | 'parentId'>>) => void;
+  updateFolder: (id: string, patch: Partial<Pick<Folder, 'name' | 'emoji' | 'kind' | 'parentId' | 'locked'>>) => void;
   deleteFolder: (id: string) => void;
   restoreFolder: (id: string) => void;
   permanentlyDeleteFolder: (id: string) => void;
@@ -99,8 +105,11 @@ type Store = {
   setCompletionMark: (value: CompletionMark) => void;
   setFadeOutDuration: (value: number) => void;
   setAllTodosSortField: (value: SortField) => void;
+  setDefaultFolderId: (value: string | 'all') => void;
   setLanguage: (language: Language) => void;
   setShowTodayBanner: (value: boolean) => void;
+  setStarOnLeft: (value: boolean) => void;
+  setTabBarAccentColor: (value: AccentColor | 'auto') => void;
 };
 
 export const useStore = create<Store>()(
@@ -114,15 +123,21 @@ export const useStore = create<Store>()(
       completionMark: 'check',
       fadeOutDuration: 1200,
       allTodosSortField: 'createdAt',
+      defaultFolderId: 'all',
       language: 'auto',
       showTodayBanner: true,
+      starOnLeft: false,
+      tabBarAccentColor: 'auto',
       hasHydrated: false,
       hasSeededDefaults: false,
       onboardingFolderId: null,
       isPro: false,
       focusSessionEndedMonth: null,
+      unlockedFolderIds: [],
       setHasHydrated: (value) => set({ hasHydrated: value }),
       setIsPro: (value) => set({ isPro: value }),
+      unlockFolder: (id) => set((state) => ({ unlockedFolderIds: [...state.unlockedFolderIds, id] })),
+      isFolderUnlocked: (id) => get().unlockedFolderIds.includes(id),
 
       seedDefaultData: () => {
         const resolvedLanguage = resolveLanguage(get().language);
@@ -144,47 +159,36 @@ export const useStore = create<Store>()(
           });
         }
 
-        const householdId = get().addFolder(data.householdFolderName, null, suggestFolderEmoji(data.householdFolderName), 'tasks');
-        for (const task of data.focusDemoTasks) {
+        const homeId = get().addFolder(data.homeFolderName, null, suggestFolderEmoji(data.homeFolderName), 'tasks');
+        for (const room of data.roomSubfolders) {
+          const roomId = get().addFolder(room.name, homeId, suggestFolderEmoji(room.name));
           const todoId = get().addTodo({
-            title: task.title,
-            folderId: householdId,
-            priority: task.priority,
+            title: room.task,
+            folderId: roomId,
+            priority: room.priority,
             dueDate: null,
             dueTime: null,
             recurrence: null,
             reminderEnabled: false,
             reminderTime: null,
             notificationId: null,
-            estimatedMinutes: task.minutes,
+            estimatedMinutes: room.minutes,
           });
           get().toggleInNow(todoId);
         }
 
-        for (const sub of data.householdSubfolders) {
-          const subfolderId = get().addFolder(sub.name, householdId, suggestFolderEmoji(sub.name));
-          get().addTodo({
-            title: sub.todo,
-            folderId: subfolderId,
-            priority: null,
-            dueDate: null,
-            dueTime: null,
-            recurrence: null,
-            reminderEnabled: false,
-            reminderTime: null,
-            notificationId: null,
-            estimatedMinutes: null,
-          });
-        }
-
         get().addFolder(data.listFolderName, null, suggestFolderEmoji(data.listFolderName), 'list');
+        get().addFolder(data.privateFolderName, null, suggestFolderEmoji(data.privateFolderName), 'tasks');
+        get().addFolder(data.workFolderName, null, suggestFolderEmoji(data.workFolderName), 'tasks');
 
         set({ hasSeededDefaults: true, onboardingFolderId: onboardingId });
       },
 
       addFolder: (name, parentId, emoji, kind = 'tasks') => {
         const id = createId();
-        set((state) => ({ folders: [...state.folders, { id, name, parentId, emoji, kind, deletedAt: null }] }));
+        set((state) => ({
+          folders: [...state.folders, { id, name, parentId, emoji, kind, locked: false, deletedAt: null }],
+        }));
         return id;
       },
 
@@ -424,8 +428,11 @@ export const useStore = create<Store>()(
       setCompletionMark: (value) => set({ completionMark: value }),
       setFadeOutDuration: (value) => set({ fadeOutDuration: value }),
       setAllTodosSortField: (value) => set({ allTodosSortField: value }),
+      setDefaultFolderId: (value) => set({ defaultFolderId: value }),
       setLanguage: (language) => set({ language }),
       setShowTodayBanner: (value) => set({ showTodayBanner: value }),
+      setStarOnLeft: (value) => set({ starOnLeft: value }),
+      setTabBarAccentColor: (value) => set({ tabBarAccentColor: value }),
     }),
     {
       name: 'apartment-todos',
@@ -441,8 +448,11 @@ export const useStore = create<Store>()(
         completionMark: state.completionMark,
         fadeOutDuration: state.fadeOutDuration,
         allTodosSortField: state.allTodosSortField,
+        defaultFolderId: state.defaultFolderId,
         language: state.language,
         showTodayBanner: state.showTodayBanner,
+        starOnLeft: state.starOnLeft,
+        tabBarAccentColor: state.tabBarAccentColor,
         hasSeededDefaults: state.hasSeededDefaults,
         onboardingFolderId: state.onboardingFolderId,
         isPro: state.isPro,

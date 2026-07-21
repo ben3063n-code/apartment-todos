@@ -20,13 +20,28 @@ export function TodayBanner({ todos }: Props) {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
 
-  const dueTodayCount = useMemo(() => {
+  const dueTodayTodos = useMemo(() => {
     const today = todayDateOnly();
-    return todos.filter((todo) => !todo.done && todo.dueDate === today).length;
+    return todos.filter((todo) => !todo.done && todo.dueDate === today);
   }, [todos]);
+  const dueTodayCount = dueTodayTodos.length;
+
+  const dynamicQuote = useMemo(() => {
+    const withEstimate = dueTodayTodos
+      .filter((todo) => todo.estimatedMinutes !== null)
+      .sort((a, b) => (a.estimatedMinutes ?? 0) - (b.estimatedMinutes ?? 0));
+    if (withEstimate.length === 0) return null;
+
+    const count = Math.max(1, Math.ceil(withEstimate.length / 2));
+    const subset = withEstimate.slice(0, count);
+    const minutes = subset.reduce((sum, todo) => sum + (todo.estimatedMinutes ?? 0), 0);
+    const percent = Math.round((count / dueTodayCount) * 100);
+    return t('banner.dynamicQuote', { count, minutes, percent });
+  }, [dueTodayTodos, dueTodayCount, t]);
 
   const quotes = t('banner.quotes', { returnObjects: true }) as string[];
-  const quote = quotes[dayOfYear(new Date()) % quotes.length];
+  const staticQuote = quotes[dayOfYear(new Date()) % quotes.length];
+  const quote = dynamicQuote ?? staticQuote;
 
   if (dueTodayCount === 0) return null;
 

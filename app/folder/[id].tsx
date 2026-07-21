@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { FolderPicker } from '../../components/FolderPicker';
 import { confirmDestructive, showUpsell } from '../../lib/confirm';
@@ -38,6 +38,7 @@ export default function FolderModal() {
   const [emojiTouched, setEmojiTouched] = useState(false);
   const [kind, setKind] = useState<FolderKind>(existing?.kind ?? 'tasks');
   const [parentId, setParentId] = useState<string | null>(initialParentId);
+  const [locked, setLocked] = useState(existing?.locked ?? false);
 
   useEffect(() => {
     if (isNew && !emojiTouched) {
@@ -60,9 +61,10 @@ export default function FolderModal() {
 
     const finalEmoji = emoji.trim() || suggestFolderEmoji(name);
     if (isNew) {
-      addFolder(name.trim(), parentId, finalEmoji, kind);
+      const newId = addFolder(name.trim(), parentId, finalEmoji, kind);
+      if (locked) updateFolder(newId, { locked: true });
     } else if (existing) {
-      updateFolder(existing.id, { name: name.trim(), emoji: finalEmoji, kind, parentId });
+      updateFolder(existing.id, { name: name.trim(), emoji: finalEmoji, kind, parentId, locked });
     }
     router.back();
   };
@@ -146,6 +148,14 @@ export default function FolderModal() {
         {kind === 'tasks' ? t('folderModal.kindHintTasks') : t('folderModal.kindHintList')}
       </Text>
 
+      <View style={styles.lockRow}>
+        <View style={styles.lockLabelCol}>
+          <Text style={[styles.label, { color: colors.textMuted, marginTop: 0 }]}>{t('folderModal.lockLabel')}</Text>
+          <Text style={[styles.kindHint, { color: colors.textMuted, marginTop: 2 }]}>{t('folderModal.lockHint')}</Text>
+        </View>
+        <Switch value={locked} onValueChange={setLocked} />
+      </View>
+
       <Pressable
         style={[styles.saveButton, { backgroundColor: canSave ? colors.accent : colors.surfaceAlt }]}
         onPress={handleSave}
@@ -176,6 +186,8 @@ const styles = StyleSheet.create({
   kindSegmented: { flexDirection: 'row', borderRadius: 9, borderWidth: 1, overflow: 'hidden' },
   kindSegment: { flex: 1, paddingVertical: 9, alignItems: 'center' },
   kindHint: { fontSize: 12, marginTop: 6 },
+  lockRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 },
+  lockLabelCol: { flex: 1, paddingRight: 12 },
   saveButton: { marginTop: 28, borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
   deleteButton: { marginTop: 16, alignItems: 'center', paddingVertical: 8 },
 });

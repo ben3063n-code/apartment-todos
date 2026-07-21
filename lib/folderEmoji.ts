@@ -3,7 +3,7 @@ const FALLBACK_EMOJI = '📁';
 const EMOJI_RULES: { emoji: string; keywords: string[] }[] = [
   {
     emoji: '🏠',
-    keywords: ['household', 'haushalt', 'maison', 'casa', '家务', '家事'],
+    keywords: ['household', 'haushalt', 'zuhause', 'home', 'maison', 'casa', '家务', '家事', '自宅', '家'],
   },
   { emoji: '🍳', keywords: ['kitchen', 'küche', 'kuche', 'cuisine', 'cucina', '厨房', 'キッチン', '台所'] },
   { emoji: '🛁', keywords: ['bathroom', 'bad', 'badezimmer', 'salle de bain', 'bagno', '浴室', 'バスルーム'] },

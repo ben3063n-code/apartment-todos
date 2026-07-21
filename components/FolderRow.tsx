@@ -140,6 +140,7 @@ export function FolderRow({
           >
             {folder.name}
           </Text>
+          {folder.locked && <Text style={styles.lockIcon}>🔒</Text>}
         </Pressable>
       </GestureDetector>
       {showActions && (
@@ -162,5 +163,6 @@ const styles = StyleSheet.create({
   main: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8, minWidth: 0 },
   icon: { fontSize: 14 },
   title: { fontSize: 14, fontWeight: '600', flexShrink: 1 },
+  lockIcon: { fontSize: 11 },
   action: { paddingHorizontal: 4, paddingVertical: 8 },
 });

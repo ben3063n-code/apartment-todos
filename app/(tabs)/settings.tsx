@@ -4,11 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { BackupControls } from '../../components/BackupControls';
-import { showInfo, showUpsell } from '../../lib/confirm';
+import { DefaultFolderPicker } from '../../components/DefaultFolderPicker';
+import { SettingLabelWithInfo } from '../../components/SettingLabelWithInfo';
+import { showUpsell } from '../../lib/confirm';
 import { LANGUAGE_NAMES } from '../../lib/i18n/languageNames';
 import {
   ACCENT_COLORS,
   SUPPORTED_LANGUAGES,
+  type AccentColor,
   type CompletionMark,
   type Language,
   type ThemePreference,
@@ -20,6 +23,7 @@ import { useAppTheme } from '../../lib/useAppTheme';
 const THEME_OPTIONS: ThemePreference[] = ['light', 'dark', 'auto'];
 const LANGUAGE_OPTIONS: Language[] = ['auto', ...SUPPORTED_LANGUAGES];
 const COMPLETION_MARK_OPTIONS: CompletionMark[] = ['check', 'cross'];
+const TAB_BAR_COLOR_OPTIONS: (AccentColor | 'auto')[] = ['auto', ...ACCENT_COLORS];
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -39,6 +43,10 @@ export default function SettingsScreen() {
   const setCompletionMark = useStore((state) => state.setCompletionMark);
   const fadeOutDuration = useStore((state) => state.fadeOutDuration);
   const setFadeOutDuration = useStore((state) => state.setFadeOutDuration);
+  const starOnLeft = useStore((state) => state.starOnLeft);
+  const setStarOnLeft = useStore((state) => state.setStarOnLeft);
+  const tabBarAccentColor = useStore((state) => state.tabBarAccentColor);
+  const setTabBarAccentColor = useStore((state) => state.setTabBarAccentColor);
   const isPro = useStore((state) => state.isPro);
 
   return (
@@ -120,6 +128,37 @@ export default function SettingsScreen() {
         })}
       </View>
 
+      <SettingLabelWithInfo
+        label={t('settings.tabBarColorLabel')}
+        infoTitle={t('settings.tabBarColorLabel')}
+        infoBody={t('settings.tabBarColorInfo')}
+        fontSize={13}
+      />
+      <View style={[styles.swatchRow, { marginTop: 8 }]}>
+        {TAB_BAR_COLOR_OPTIONS.map((key) => {
+          const isAuto = key === 'auto';
+          const swatch = isAuto ? colors.accent : ACCENT_SWATCH_PREVIEW[key];
+          const selected = tabBarAccentColor === key;
+          return (
+            <Pressable
+              key={key}
+              onPress={() => setTabBarAccentColor(key)}
+              style={[
+                styles.swatch,
+                { backgroundColor: swatch },
+                selected && { borderColor: colors.text, borderWidth: 2 },
+              ]}
+            >
+              {isAuto ? (
+                <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>A</Text>
+              ) : (
+                selected && <Text style={{ color: '#fff', fontSize: 13 }}>✓</Text>
+              )}
+            </Pressable>
+          );
+        })}
+      </View>
+
       <Text style={[styles.sectionLabel, { color: colors.textMuted, marginTop: 24 }]}>
         {t('settings.languageLabel')}
       </Text>
@@ -147,16 +186,45 @@ export default function SettingsScreen() {
       </Text>
       <View style={[styles.list, { borderColor: colors.border }]}>
         <View style={styles.row}>
-          <View style={styles.labelWithInfo}>
-            <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.showBannerLabel')}</Text>
+          <SettingLabelWithInfo
+            label={t('settings.showBannerLabel')}
+            infoTitle={t('settings.bannerInfoTitle')}
+            infoBody={t('settings.bannerInfoBody')}
+          />
+          <Switch value={showTodayBanner} onValueChange={setShowTodayBanner} />
+        </View>
+        <View style={[styles.row, styles.rowBorder, { borderTopColor: colors.border }]}>
+          <SettingLabelWithInfo
+            label={t('settings.starPositionLabel')}
+            infoTitle={t('settings.starPositionLabel')}
+            infoBody={t('settings.starPositionInfo')}
+          />
+          <View style={[styles.miniSegmented, { borderColor: colors.border }]}>
             <Pressable
-              hitSlop={8}
-              onPress={() => showInfo(t('settings.bannerInfoTitle'), t('settings.bannerInfoBody'))}
+              style={[styles.miniSegment, !starOnLeft && { backgroundColor: colors.accent }]}
+              onPress={() => setStarOnLeft(false)}
             >
-              <Text style={{ color: colors.textMuted, fontSize: 14 }}>ⓘ</Text>
+              <Text style={{ color: !starOnLeft ? colors.accentText : colors.text, fontSize: 13, fontWeight: '600' }}>
+                {t('settings.starPositionRight')}
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.miniSegment, { borderLeftWidth: 1, borderLeftColor: colors.border }, starOnLeft && { backgroundColor: colors.accent }]}
+              onPress={() => setStarOnLeft(true)}
+            >
+              <Text style={{ color: starOnLeft ? colors.accentText : colors.text, fontSize: 13, fontWeight: '600' }}>
+                {t('settings.starPositionLeft')}
+              </Text>
             </Pressable>
           </View>
-          <Switch value={showTodayBanner} onValueChange={setShowTodayBanner} />
+        </View>
+        <View style={[styles.row, styles.rowBorder, { borderTopColor: colors.border, flexDirection: 'column', alignItems: 'stretch', gap: 6 }]}>
+          <SettingLabelWithInfo
+            label={t('settings.defaultFolderLabel')}
+            infoTitle={t('settings.defaultFolderLabel')}
+            infoBody={t('settings.defaultFolderInfo')}
+          />
+          <DefaultFolderPicker />
         </View>
         <View style={[styles.row, styles.rowBorder, { borderTopColor: colors.border }]}>
           <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.completionMarkLabel')}</Text>

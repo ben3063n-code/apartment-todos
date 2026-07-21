@@ -21,7 +21,7 @@ export function RecurrencePicker({ value, onChange, disabled }: Props) {
   return (
     <View>
       <Pressable
-        style={[styles.current, { borderColor: colors.border }, disabled && { opacity: 0.5 }]}
+        style={[styles.current, { borderColor: colors.border }]}
         onPress={() => !disabled && setExpanded((prev) => !prev)}
         disabled={disabled}
       >

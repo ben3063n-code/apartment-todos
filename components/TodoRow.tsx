@@ -23,6 +23,7 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
   const { colors } = useAppTheme();
   const completionMark = useStore((state) => state.completionMark);
   const fadeOutDuration = useStore((state) => state.fadeOutDuration);
+  const starOnLeft = useStore((state) => state.starOnLeft);
   const fade = useSharedValue(1);
 
   useEffect(() => {
@@ -40,23 +41,35 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
   const titleColor = justCompleted ? colors.accent : permanentlyDone ? colors.textMuted : colors.text;
   const checkboxColor = justCompleted ? colors.accent : permanentlyDone ? colors.textMuted : colors.text;
 
+  const checkbox = (
+    <Pressable hitSlop={8} onPress={onToggle} style={styles.checkboxWrap}>
+      <View
+        style={[
+          styles.checkbox,
+          { borderColor: checkboxColor },
+          todo.done && { backgroundColor: checkboxColor },
+        ]}
+      >
+        {todo.done && (
+          <Text style={[styles.checkboxMark, { color: colors.background }]}>
+            {completionMark === 'cross' ? '✕' : '✓'}
+          </Text>
+        )}
+      </View>
+    </Pressable>
+  );
+
+  const star = onToggleNow && (
+    <Pressable hitSlop={8} onPress={onToggleNow} style={styles.starWrap}>
+      <Text style={{ fontSize: 16, color: todo.inNowList ? '#f2b400' : colors.textMuted }}>
+        {todo.inNowList ? '★' : '☆'}
+      </Text>
+    </Pressable>
+  );
+
   return (
     <AnimatedPressable style={[styles.row, { borderBottomColor: colors.border }, animatedStyle]} onPress={onPress}>
-      <Pressable hitSlop={8} onPress={onToggle} style={styles.checkboxWrap}>
-        <View
-          style={[
-            styles.checkbox,
-            { borderColor: checkboxColor },
-            todo.done && { backgroundColor: checkboxColor },
-          ]}
-        >
-          {todo.done && (
-            <Text style={[styles.checkboxMark, { color: colors.background }]}>
-              {completionMark === 'cross' ? '✕' : '✓'}
-            </Text>
-          )}
-        </View>
-      </Pressable>
+      {starOnLeft ? star : checkbox}
       <View style={styles.content}>
         <Text
           style={[
@@ -64,6 +77,7 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
             { color: titleColor },
             permanentlyDone && styles.titleDone,
           ]}
+          numberOfLines={3}
         >
           {todo.title}
         </Text>
@@ -81,13 +95,7 @@ export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, jus
           )}
         </View>
       </View>
-      {onToggleNow && (
-        <Pressable hitSlop={8} onPress={onToggleNow} style={styles.starWrap}>
-          <Text style={{ fontSize: 16, color: todo.inNowList ? '#f2b400' : colors.textMuted }}>
-            {todo.inNowList ? '★' : '☆'}
-          </Text>
-        </Pressable>
-      )}
+      {starOnLeft ? checkbox : star}
     </AnimatedPressable>
   );
 }

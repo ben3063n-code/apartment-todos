@@ -62,11 +62,10 @@ export function DurationPicker({ value, onChange }: Props) {
                   style={styles.wheel}
                 >
                   {HOURS.map((h) => (
-                    <Picker.Item key={h} label={String(h)} value={h} />
+                    <Picker.Item key={h} label={`${h} ${t('duration.hoursUnit')}`} value={h} />
                   ))}
                 </Picker>
               </View>
-              <Text style={[styles.wheelSeparator, { color: colors.textMuted }]}>{t('duration.hoursUnit')}</Text>
               <View style={styles.wheelCol}>
                 <Picker
                   selectedValue={minutes}
@@ -75,11 +74,10 @@ export function DurationPicker({ value, onChange }: Props) {
                   style={styles.wheel}
                 >
                   {MINUTES.map((m) => (
-                    <Picker.Item key={m} label={String(m)} value={m} />
+                    <Picker.Item key={m} label={`${m} ${t('duration.minutesUnit')}`} value={m} />
                   ))}
                 </Picker>
               </View>
-              <Text style={[styles.wheelSeparator, { color: colors.textMuted }]}>{t('duration.minutesUnit')}</Text>
             </View>
           </View>
 
@@ -118,6 +116,5 @@ const styles = StyleSheet.create({
   wheelRow: { flexDirection: 'row', alignItems: 'center' },
   wheelCol: { flex: 1 },
   wheel: { width: '100%', height: 140 },
-  wheelSeparator: { fontSize: 13, fontWeight: '600', paddingHorizontal: 2 },
   doneButton: { borderRadius: 9, paddingVertical: 11, alignItems: 'center', marginTop: 2 },
 });

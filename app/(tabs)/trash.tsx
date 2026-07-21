@@ -114,7 +114,10 @@ function CompletedList() {
               </Text>
             </View>
             <View style={styles.rowContent}>
-              <Text style={[styles.rowTitle, { color: colors.textMuted, textDecorationLine: 'line-through' }]}>
+              <Text
+                style={[styles.rowTitle, { color: colors.textMuted, textDecorationLine: 'line-through' }]}
+                numberOfLines={3}
+              >
                 {item.title}
               </Text>
               <View style={styles.badgeRow}>

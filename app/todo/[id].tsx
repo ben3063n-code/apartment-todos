@@ -12,6 +12,7 @@ import { confirmDestructive, showUpsell } from '../../lib/confirm';
 import type { Priority, Recurrence } from '../../lib/models';
 import { cancelReminder, ensureNotificationPermission, scheduleReminder } from '../../lib/notifications';
 import { paramToFolderId } from '../../lib/routes';
+import { shareTodo } from '../../lib/shareTodo';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
 import { useUndoToast } from '../../lib/undoToast';
@@ -23,6 +24,7 @@ export default function TodoModal() {
   const { t } = useTranslation();
 
   const todos = useStore((state) => state.todos);
+  const folders = useStore((state) => state.folders);
   const addTodo = useStore((state) => state.addTodo);
   const updateTodo = useStore((state) => state.updateTodo);
   const deleteTodo = useStore((state) => state.deleteTodo);
@@ -104,6 +106,12 @@ export default function TodoModal() {
     });
   };
 
+  const handleShare = () => {
+    if (!existing) return;
+    const folder = existing.folderId ? folders.find((f) => f.id === existing.folderId) : null;
+    shareTodo(existing, folder ? `${folder.emoji} ${folder.name}` : null);
+  };
+
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.titleLabel')}</Text>
@@ -154,13 +162,15 @@ export default function TodoModal() {
         />
       )}
 
-      <View style={styles.recurrenceRow}>
-        <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.recurrenceLabel')}</Text>
-        {!dueDate && (
-          <Text style={[styles.hint, { color: colors.textMuted }]}>{t('todo.recurrenceNeedsDueDate')}</Text>
-        )}
+      <View style={!dueDate && styles.recurrenceFaint}>
+        <View style={styles.recurrenceRow}>
+          <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.recurrenceLabel')}</Text>
+          {!dueDate && (
+            <Text style={[styles.hint, { color: colors.textMuted }]}>{t('todo.recurrenceNeedsDueDate')}</Text>
+          )}
+        </View>
+        <RecurrencePicker value={recurrence} onChange={setRecurrence} disabled={!dueDate} />
       </View>
-      <RecurrencePicker value={recurrence} onChange={setRecurrence} disabled={!dueDate} />
 
       <View style={styles.reminderRow}>
         <View style={styles.reminderLabelCol}>
@@ -211,6 +221,12 @@ export default function TodoModal() {
       </Pressable>
 
       {existing && (
+        <Pressable style={styles.shareButton} onPress={handleShare}>
+          <Text style={{ color: colors.accent, fontWeight: '600' }}>📤 {t('todo.share')}</Text>
+        </Pressable>
+      )}
+
+      {existing && (
         <Pressable style={styles.deleteButton} onPress={handleDelete}>
           <Text style={{ color: colors.danger, fontWeight: '600' }}>{t('todo.delete')}</Text>
         </Pressable>
@@ -225,6 +241,7 @@ const styles = StyleSheet.create({
   input: { borderWidth: 1, borderRadius: 9, paddingHorizontal: 14, paddingVertical: 9, fontSize: 16 },
   timeInput: { width: 100 },
   recurrenceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8, marginTop: 14, marginBottom: 6 },
+  recurrenceFaint: { opacity: 0.35 },
   reminderRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -234,5 +251,6 @@ const styles = StyleSheet.create({
   reminderLabelCol: { flex: 1, paddingRight: 12 },
   hint: { fontSize: 12, marginTop: 2 },
   saveButton: { marginTop: 28, borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
-  deleteButton: { marginTop: 16, alignItems: 'center', paddingVertical: 8 },
+  shareButton: { marginTop: 20, alignItems: 'center', paddingVertical: 8 },
+  deleteButton: { marginTop: 4, alignItems: 'center', paddingVertical: 8 },
 });

@@ -7,26 +7,24 @@ type Props = {
   label: string;
   iconOnly?: boolean;
   imageSource?: ImageSourcePropType;
+  indicatorColor?: string;
   onPress?: ((e: GestureResponderEvent) => void) | null;
   onLongPress?: ((e: GestureResponderEvent) => void) | null;
   'aria-selected'?: boolean;
   testID?: string;
 };
 
-export function TabBarButton({ label, iconOnly, imageSource, onPress, onLongPress, testID, ...rest }: Props) {
+export function TabBarButton({ label, iconOnly, imageSource, indicatorColor, onPress, onLongPress, testID, ...rest }: Props) {
   const { colors, scheme } = useAppTheme();
   const selected = rest['aria-selected'] ?? false;
 
   if (imageSource) {
+    const tintColor = selected && indicatorColor ? indicatorColor : scheme === 'dark' ? '#ffffff' : undefined;
     return (
       <Pressable onPress={onPress} onLongPress={onLongPress} testID={testID} style={styles.wrapper}>
         <Image
           source={imageSource}
-          style={[
-            styles.logo,
-            { opacity: selected ? 1 : 0.5 },
-            scheme === 'dark' && { tintColor: '#ffffff' },
-          ]}
+          style={[styles.logo, { opacity: selected ? 1 : 0.5 }, tintColor && { tintColor }]}
           resizeMode="contain"
         />
       </Pressable>
