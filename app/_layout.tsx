@@ -73,6 +73,7 @@ export default function RootLayout() {
                 title: t('help.title'),
                 headerStyle: { backgroundColor: colors.surface },
                 headerTintColor: colors.text,
+                headerBackTitle: '',
               }}
             />
             <Stack.Screen
@@ -82,6 +83,7 @@ export default function RootLayout() {
                 title: t('pro.title'),
                 headerStyle: { backgroundColor: colors.surface },
                 headerTintColor: colors.text,
+                headerBackTitle: '',
               }}
             />
           </Stack>
