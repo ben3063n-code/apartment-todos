@@ -14,7 +14,8 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#ffffff" />
-        <link rel="apple-touch-icon" href="/apartment-todos/app/icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apartment-todos/app/icon.png" />
+        <link rel="icon" type="image/png" href="/apartment-todos/app/icon.png" />
 
         <ScrollViewStyleReset />
       </head>
