@@ -1,4 +1,5 @@
 import { Picker } from '@react-native-picker/picker';
+import * as Haptics from 'expo-haptics';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -10,6 +11,8 @@ type Props = {
   value: number | null;
   onChange: (value: number | null) => void;
 };
+
+const tickHaptic = () => Haptics.selectionAsync().catch(() => {});
 
 const HOURS = Array.from({ length: 9 }, (_, i) => i);
 const MINUTES = Array.from({ length: 60 }, (_, i) => i);
@@ -27,6 +30,7 @@ export function DurationPicker({ value, onChange }: Props) {
   const currentLabel = value !== null ? formatDuration(value, t) : t('todo.estimatedTimeNone');
 
   const applyHoursMinutes = (nextHours: number, nextMinutes: number) => {
+    tickHaptic();
     const nextTotal = nextHours * 60 + nextMinutes;
     onChange(nextTotal > 0 ? nextTotal : null);
   };

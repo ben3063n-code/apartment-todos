@@ -1,5 +1,6 @@
 import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,6 +21,8 @@ import {
 import { useStore } from '../../lib/store';
 import { ACCENT_SWATCH_PREVIEW } from '../../lib/theme';
 import { useAppTheme } from '../../lib/useAppTheme';
+
+const tickHaptic = () => Haptics.selectionAsync().catch(() => {});
 
 const THEME_OPTIONS: ThemePreference[] = ['light', 'dark', 'auto'];
 const LANGUAGE_OPTIONS: Language[] = ['auto', ...SUPPORTED_LANGUAGES];
@@ -94,7 +97,11 @@ export default function SettingsScreen() {
           value={brightness}
           minimumValue={0}
           maximumValue={1}
-          onValueChange={setBrightness}
+          step={0.05}
+          onValueChange={(value) => {
+            tickHaptic();
+            setBrightness(value);
+          }}
           minimumTrackTintColor={colors.accent}
           maximumTrackTintColor={colors.border}
           thumbTintColor={colors.accent}
@@ -261,7 +268,10 @@ export default function SettingsScreen() {
             minimumValue={300}
             maximumValue={3000}
             step={100}
-            onValueChange={setFadeOutDuration}
+            onValueChange={(value) => {
+              tickHaptic();
+              setFadeOutDuration(value);
+            }}
             minimumTrackTintColor={colors.accent}
             maximumTrackTintColor={colors.border}
             thumbTintColor={colors.accent}
