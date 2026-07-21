@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { DueDateField } from '../../components/DueDateField';
+import { DurationPicker } from '../../components/DurationPicker';
 import { FolderPicker } from '../../components/FolderPicker';
 import { PriorityPicker } from '../../components/PriorityPicker';
 import { RecurrencePicker } from '../../components/RecurrencePicker';
@@ -13,6 +14,7 @@ import { cancelReminder, ensureNotificationPermission, scheduleReminder } from '
 import { paramToFolderId } from '../../lib/routes';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
+import { useUndoToast } from '../../lib/undoToast';
 
 export default function TodoModal() {
   const params = useLocalSearchParams<{ id: string; folderId?: string }>();
@@ -24,6 +26,8 @@ export default function TodoModal() {
   const addTodo = useStore((state) => state.addTodo);
   const updateTodo = useStore((state) => state.updateTodo);
   const deleteTodo = useStore((state) => state.deleteTodo);
+  const restoreTodo = useStore((state) => state.restoreTodo);
+  const { showUndo } = useUndoToast();
 
   const isNew = params.id === 'new';
   const existing = isNew ? undefined : todos.find((t) => t.id === params.id);
@@ -32,6 +36,7 @@ export default function TodoModal() {
   const [title, setTitle] = useState(existing?.title ?? '');
   const [folderId, setFolderId] = useState<string | null>(initialFolderId);
   const [priority, setPriority] = useState<Priority | null>(existing?.priority ?? null);
+  const [estimatedMinutes, setEstimatedMinutes] = useState<number | null>(existing?.estimatedMinutes ?? null);
   const [dueDate, setDueDate] = useState<string | null>(existing?.dueDate ?? null);
   const [dueTime, setDueTime] = useState<string | null>(existing?.dueTime ?? null);
   const [recurrence, setRecurrence] = useState<Recurrence | null>(existing?.recurrence ?? null);
@@ -77,6 +82,7 @@ export default function TodoModal() {
       reminderEnabled: willSchedule,
       reminderTime: willSchedule ? reminderTime : null,
       notificationId,
+      estimatedMinutes,
     };
 
     if (isNew) {
@@ -93,6 +99,7 @@ export default function TodoModal() {
       cancelReminder(existing.notificationId);
       deleteTodo(existing.id);
       router.back();
+      showUndo(t('todo.deletedToast', { title: existing.title }), () => restoreTodo(existing.id));
     });
   };
 
@@ -113,6 +120,9 @@ export default function TodoModal() {
 
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.priorityLabel')}</Text>
       <PriorityPicker value={priority} onChange={setPriority} />
+
+      <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.estimatedTimeLabel')}</Text>
+      <DurationPicker value={estimatedMinutes} onChange={setEstimatedMinutes} />
 
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.dueDateLabel')}</Text>
       <DueDateField

@@ -1,16 +1,20 @@
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
 
 import { newFolderHref, newTodoHref } from '../lib/routes';
 import { useAppTheme } from '../lib/useAppTheme';
 
 type Props = {
   folderId: string | 'all';
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
 };
 
-export function FolderFabRow({ folderId }: Props) {
+export function FolderFabRow({ folderId, searchQuery, onSearchChange }: Props) {
   const router = useRouter();
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
 
   const parentOrFolderId = folderId === 'all' ? null : folderId;
 
@@ -22,6 +26,15 @@ export function FolderFabRow({ folderId }: Props) {
       >
         <Text style={[styles.fabPlus, { color: colors.text }]}>+</Text>
       </Pressable>
+      {folderId === 'all' && (
+        <TextInput
+          style={[styles.searchBar, { backgroundColor: colors.surfaceAlt, borderColor: colors.border, color: colors.text }]}
+          value={searchQuery}
+          onChangeText={onSearchChange}
+          placeholder={t('allTodos.searchPlaceholder')}
+          placeholderTextColor={colors.textMuted}
+        />
+      )}
       <Pressable
         style={[styles.fabCircle, styles.fabRight, { backgroundColor: colors.accent, borderColor: colors.accent }]}
         onPress={() => router.push(newTodoHref(parentOrFolderId))}
@@ -52,4 +65,16 @@ const styles = StyleSheet.create({
   fabLeft: { left: 16 },
   fabRight: { right: 16 },
   fabPlus: { fontSize: 26, fontWeight: '400', lineHeight: 28 },
+  searchBar: {
+    position: 'absolute',
+    left: 84,
+    right: 84,
+    bottom: 22,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    fontSize: 14,
+    zIndex: 20,
+  },
 });

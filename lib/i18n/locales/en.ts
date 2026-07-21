@@ -2,6 +2,7 @@ export default {
   common: {
     cancel: 'Cancel',
     delete: 'Delete',
+    undo: 'Undo',
   },
   tabs: {
     folders: 'Folders',
@@ -40,6 +41,8 @@ export default {
     noFoldersHint: 'No folders yet. Create one first.',
     priorityLabel: 'Priority',
     priorityNone: 'None',
+    estimatedTimeLabel: 'Estimated time',
+    estimatedTimeNone: 'None',
     priority: {
       '1': 'Highest',
       '2': 'High',
@@ -61,6 +64,7 @@ export default {
     save: 'Save',
     delete: 'Delete task',
     deleteConfirmTitle: 'Delete task?',
+    deletedToast: '"{{title}}" deleted',
   },
   folderModal: {
     modalTitle: 'Folder',
@@ -76,9 +80,11 @@ export default {
     todoCount_one: '{{count}} task',
     todoCount_other: '{{count}} tasks',
     deleteConfirmMessage: 'This will permanently delete {{subfolders}} and {{todos}}.',
+    deletedToast: '"{{name}}" deleted',
   },
   allTodos: {
     sort: { priority: 'Priority', dueDate: 'Due date', createdAt: 'Created', folderName: 'Folder' },
+    searchPlaceholder: 'Search tasks…',
   },
   banner: {
     title: "Today's tasks",
@@ -101,6 +107,15 @@ export default {
   now: {
     emptyState: 'Nothing queued yet. Tap the star on a task to add it here.',
     focusHint: 'Keep it focused — try to keep this list short.',
+    timeBudgetSubtitle_one: 'for {{count}} task',
+    timeBudgetSubtitle_other: 'for {{count}} tasks',
+    timeBudgetUnestimated_one: '{{count}} task without a time estimate',
+    timeBudgetUnestimated_other: '{{count}} tasks without a time estimate',
+  },
+  duration: {
+    minutesOnly: '{{count}} min',
+    hoursOnly: '{{count}} h',
+    hoursAndMinutes: '{{hours}} h {{minutes}} min',
   },
   settings: {
     appearanceLabel: 'Appearance',
@@ -116,6 +131,14 @@ export default {
     completionMarkLabel: 'Completion mark',
     fadeOutDurationLabel: 'Fade-out duration after completing',
     helpLabel: 'How this app works',
+    dataLabel: 'Data',
+    exportLabel: 'Export backup',
+    importLabel: 'Import backup',
+    importConfirmTitle: 'Import backup?',
+    importConfirmMessage: 'This will replace all current folders, tasks, and settings with the contents of the backup file.',
+    importConfirm: 'Import',
+    importErrorTitle: 'Import failed',
+    importErrorBody: 'This file could not be read as a valid backup.',
   },
   completed: {
     emptyState: 'No completed tasks yet.',

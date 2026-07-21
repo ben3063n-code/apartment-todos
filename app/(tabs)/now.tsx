@@ -6,7 +6,8 @@ import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } fro
 
 import { PriorityBadge } from '../../components/PriorityBadge';
 import { TodoRow } from '../../components/TodoRow';
-import type { Priority } from '../../lib/models';
+import { formatDuration } from '../../lib/formatDuration';
+import type { Priority, Todo } from '../../lib/models';
 import { editTodoHref } from '../../lib/routes';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
@@ -61,9 +62,11 @@ export default function NowScreen() {
 
   const focusJustCompleted = recentlyCompletedIds.has(focus.id);
   const accentColor = focus.priority ? colors.priority[focus.priority] : colors.textMuted;
+  const totalMinutes = queue.reduce((sum, item) => sum + (item.estimatedMinutes ?? 0), 0);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {totalMinutes > 0 && <TimeBudgetBar queue={queue} totalMinutes={totalMinutes} />}
       <FocusCard
         title={focus.title}
         priority={focus.priority}
@@ -93,6 +96,41 @@ export default function NowScreen() {
           />
         )}
       />
+    </View>
+  );
+}
+
+function TimeBudgetBar({ queue, totalMinutes }: { queue: Todo[]; totalMinutes: number }) {
+  const { colors } = useAppTheme();
+  const { t } = useTranslation();
+
+  const segments = queue.filter((todo) => todo.estimatedMinutes);
+  const withoutEstimate = queue.length - segments.length;
+
+  return (
+    <View style={styles.budgetWrap}>
+      <View style={styles.budgetHeaderRow}>
+        <Text style={[styles.budgetTotal, { color: colors.text }]}>⏱️ {formatDuration(totalMinutes, t)}</Text>
+        <Text style={[styles.budgetSubtitle, { color: colors.textMuted }]}>
+          {t('now.timeBudgetSubtitle', { count: queue.length })}
+        </Text>
+      </View>
+      <View style={[styles.budgetBar, { backgroundColor: colors.surfaceAlt }]}>
+        {segments.map((todo) => (
+          <View
+            key={todo.id}
+            style={{
+              flex: todo.estimatedMinutes ?? 1,
+              backgroundColor: todo.priority ? colors.priority[todo.priority] : colors.textMuted,
+            }}
+          />
+        ))}
+      </View>
+      {withoutEstimate > 0 && (
+        <Text style={[styles.budgetHint, { color: colors.textMuted }]}>
+          {t('now.timeBudgetUnestimated', { count: withoutEstimate })}
+        </Text>
+      )}
     </View>
   );
 }
@@ -152,4 +190,10 @@ const styles = StyleSheet.create({
   focusDoneButton: { alignSelf: 'flex-start', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 9 },
   hint: { textAlign: 'center', fontSize: 12, marginBottom: 8 },
   list: { paddingHorizontal: 16 },
+  budgetWrap: { marginHorizontal: 16, marginTop: 16 },
+  budgetHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 },
+  budgetTotal: { fontSize: 16, fontWeight: '700' },
+  budgetSubtitle: { fontSize: 12 },
+  budgetBar: { flexDirection: 'row', height: 10, borderRadius: 5, overflow: 'hidden' },
+  budgetHint: { fontSize: 11, marginTop: 4, textAlign: 'right' },
 });

@@ -7,6 +7,7 @@ import { confirmDestructive } from '../../lib/confirm';
 import type { CompletedSortField } from '../../lib/models';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
+import { useUndoToast } from '../../lib/undoToast';
 
 type Mode = 'completed' | 'deleted';
 
@@ -50,7 +51,9 @@ function CompletedList() {
   const folders = useStore((state) => state.folders);
   const toggleDone = useStore((state) => state.toggleDone);
   const deleteTodo = useStore((state) => state.deleteTodo);
+  const restoreTodo = useStore((state) => state.restoreTodo);
   const completionMark = useStore((state) => state.completionMark);
+  const { showUndo } = useUndoToast();
   const [sortField, setSortField] = useState<CompletedSortField>('completedAt');
 
   const folderNameById = useMemo(() => {
@@ -100,7 +103,10 @@ function CompletedList() {
           <Pressable
             style={[styles.row, { borderBottomColor: colors.border }]}
             onPress={() => toggleDone(item.id)}
-            onLongPress={() => deleteTodo(item.id)}
+            onLongPress={() => {
+              deleteTodo(item.id);
+              showUndo(t('todo.deletedToast', { title: item.title }), () => restoreTodo(item.id));
+            }}
           >
             <View style={[styles.checkbox, { backgroundColor: colors.accent, borderColor: colors.accent }]}>
               <Text style={[styles.checkboxMark, { color: colors.accentText }]}>

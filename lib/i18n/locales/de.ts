@@ -2,6 +2,7 @@ export default {
   common: {
     cancel: 'Abbrechen',
     delete: 'Löschen',
+    undo: 'Rückgängig',
   },
   tabs: {
     folders: 'Ordner',
@@ -40,6 +41,8 @@ export default {
     noFoldersHint: 'Noch kein Ordner vorhanden. Zuerst einen anlegen.',
     priorityLabel: 'Priorität',
     priorityNone: 'Keine',
+    estimatedTimeLabel: 'Geschätzte Dauer',
+    estimatedTimeNone: 'Keine',
     priority: {
       '1': 'Sehr hoch',
       '2': 'Hoch',
@@ -61,6 +64,7 @@ export default {
     save: 'Speichern',
     delete: 'Aufgabe löschen',
     deleteConfirmTitle: 'Aufgabe löschen?',
+    deletedToast: '"{{title}}" gelöscht',
   },
   folderModal: {
     modalTitle: 'Ordner',
@@ -76,9 +80,11 @@ export default {
     todoCount_one: '{{count}} Aufgabe',
     todoCount_other: '{{count}} Aufgaben',
     deleteConfirmMessage: 'Dabei werden {{subfolders}} und {{todos}} unwiderruflich gelöscht.',
+    deletedToast: '"{{name}}" gelöscht',
   },
   allTodos: {
     sort: { priority: 'Priorität', dueDate: 'Fällig', createdAt: 'Erstellt', folderName: 'Ordner' },
+    searchPlaceholder: 'Aufgaben durchsuchen…',
   },
   banner: {
     title: 'Heutige Aufgaben',
@@ -101,6 +107,15 @@ export default {
   now: {
     emptyState: 'Noch nichts vorgemerkt. Tippe auf den Stern bei einer Aufgabe.',
     focusHint: 'Bleib fokussiert — halte diese Liste kurz.',
+    timeBudgetSubtitle_one: 'für {{count}} Aufgabe',
+    timeBudgetSubtitle_other: 'für {{count}} Aufgaben',
+    timeBudgetUnestimated_one: '{{count}} Aufgabe ohne Zeitschätzung',
+    timeBudgetUnestimated_other: '{{count}} Aufgaben ohne Zeitschätzung',
+  },
+  duration: {
+    minutesOnly: '{{count}} Min',
+    hoursOnly: '{{count}} Std',
+    hoursAndMinutes: '{{hours}} Std {{minutes}} Min',
   },
   settings: {
     appearanceLabel: 'Erscheinungsbild',
@@ -116,6 +131,14 @@ export default {
     completionMarkLabel: 'Erledigt-Symbol',
     fadeOutDurationLabel: 'Ausblenddauer nach Erledigen',
     helpLabel: 'So funktioniert die App',
+    dataLabel: 'Daten',
+    exportLabel: 'Backup exportieren',
+    importLabel: 'Backup importieren',
+    importConfirmTitle: 'Backup importieren?',
+    importConfirmMessage: 'Dies ersetzt alle aktuellen Ordner, Aufgaben und Einstellungen mit dem Inhalt der Backup-Datei.',
+    importConfirm: 'Importieren',
+    importErrorTitle: 'Import fehlgeschlagen',
+    importErrorBody: 'Diese Datei konnte nicht als gültiges Backup gelesen werden.',
   },
   completed: {
     emptyState: 'Noch keine erledigten Aufgaben.',

@@ -8,6 +8,7 @@ import { confirmDestructive } from '../lib/confirm';
 import type { Folder } from '../lib/models';
 import { useStore } from '../lib/store';
 import { useAppTheme } from '../lib/useAppTheme';
+import { useUndoToast } from '../lib/undoToast';
 
 type Props = {
   folder: Folder;
@@ -47,6 +48,8 @@ export function FolderRow({
   const getDescendantFolderIds = useStore((state) => state.getDescendantFolderIds);
   const todos = useStore((state) => state.todos);
   const deleteFolder = useStore((state) => state.deleteFolder);
+  const restoreFolder = useStore((state) => state.restoreFolder);
+  const { showUndo } = useUndoToast();
 
   const translateY = useSharedValue(0);
   const isDragging = useSharedValue(false);
@@ -103,7 +106,10 @@ export function FolderRow({
         todos: t('folderModal.todoCount', { count: affectedTodos }),
       }),
       t('common.delete'),
-      () => deleteFolder(folder.id)
+      () => {
+        deleteFolder(folder.id);
+        showUndo(t('folderModal.deletedToast', { name: folder.name }), () => restoreFolder(folder.id));
+      }
     );
   };
 

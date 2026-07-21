@@ -10,6 +10,7 @@ import i18n from '../lib/i18n';
 import { resolveLanguage } from '../lib/i18n/resolveLanguage';
 import { useStore } from '../lib/store';
 import { useAppTheme } from '../lib/useAppTheme';
+import { UndoToastProvider } from '../lib/undoToast';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)',
@@ -40,41 +41,43 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen
-            name="todo/[id]"
-            options={{
-              presentation: 'modal',
-              headerShown: true,
-              title: t('todo.modalTitle'),
-              headerStyle: { backgroundColor: colors.surface },
-              headerTintColor: colors.text,
-              headerLeft: closeButton,
-            }}
-          />
-          <Stack.Screen
-            name="folder/[id]"
-            options={{
-              presentation: 'modal',
-              headerShown: true,
-              title: t('folderModal.modalTitle'),
-              headerStyle: { backgroundColor: colors.surface },
-              headerTintColor: colors.text,
-              headerLeft: closeButton,
-            }}
-          />
-          <Stack.Screen
-            name="help"
-            options={{
-              headerShown: true,
-              title: t('help.title'),
-              headerStyle: { backgroundColor: colors.surface },
-              headerTintColor: colors.text,
-            }}
-          />
-        </Stack>
-        <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+        <UndoToastProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen
+              name="todo/[id]"
+              options={{
+                presentation: 'modal',
+                headerShown: true,
+                title: t('todo.modalTitle'),
+                headerStyle: { backgroundColor: colors.surface },
+                headerTintColor: colors.text,
+                headerLeft: closeButton,
+              }}
+            />
+            <Stack.Screen
+              name="folder/[id]"
+              options={{
+                presentation: 'modal',
+                headerShown: true,
+                title: t('folderModal.modalTitle'),
+                headerStyle: { backgroundColor: colors.surface },
+                headerTintColor: colors.text,
+                headerLeft: closeButton,
+              }}
+            />
+            <Stack.Screen
+              name="help"
+              options={{
+                headerShown: true,
+                title: t('help.title'),
+                headerStyle: { backgroundColor: colors.surface },
+                headerTintColor: colors.text,
+              }}
+            />
+          </Stack>
+          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+        </UndoToastProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

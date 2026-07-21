@@ -2,6 +2,7 @@ export default {
   common: {
     cancel: '取消',
     delete: '删除',
+    undo: '撤销',
   },
   tabs: {
     folders: '文件夹',
@@ -40,6 +41,8 @@ export default {
     noFoldersHint: '还没有文件夹，请先创建一个。',
     priorityLabel: '优先级',
     priorityNone: '无',
+    estimatedTimeLabel: '预计时长',
+    estimatedTimeNone: '无',
     priority: {
       '1': '最高',
       '2': '高',
@@ -61,6 +64,7 @@ export default {
     save: '保存',
     delete: '删除任务',
     deleteConfirmTitle: '删除此任务？',
+    deletedToast: '已删除"{{title}}"',
   },
   folderModal: {
     modalTitle: '文件夹',
@@ -76,9 +80,11 @@ export default {
     todoCount_one: '{{count}} 个任务',
     todoCount_other: '{{count}} 个任务',
     deleteConfirmMessage: '这将永久删除 {{subfolders}} 和 {{todos}}。',
+    deletedToast: '已删除"{{name}}"',
   },
   allTodos: {
     sort: { priority: '优先级', dueDate: '截止日期', createdAt: '创建时间', folderName: '文件夹' },
+    searchPlaceholder: '搜索任务…',
   },
   banner: {
     title: '今日任务',
@@ -101,6 +107,15 @@ export default {
   now: {
     emptyState: '还没有任务在此。点击任务上的星标即可添加到这里。',
     focusHint: '保持专注——尽量让这份清单简短。',
+    timeBudgetSubtitle_one: '共 {{count}} 项任务',
+    timeBudgetSubtitle_other: '共 {{count}} 项任务',
+    timeBudgetUnestimated_one: '{{count}} 项任务未设置时间',
+    timeBudgetUnestimated_other: '{{count}} 项任务未设置时间',
+  },
+  duration: {
+    minutesOnly: '{{count}} 分钟',
+    hoursOnly: '{{count}} 小时',
+    hoursAndMinutes: '{{hours}} 小时 {{minutes}} 分钟',
   },
   settings: {
     appearanceLabel: '外观',
@@ -116,6 +131,14 @@ export default {
     completionMarkLabel: '完成标记',
     fadeOutDurationLabel: '完成后的淡出时长',
     helpLabel: '应用使用说明',
+    dataLabel: '数据',
+    exportLabel: '导出备份',
+    importLabel: '导入备份',
+    importConfirmTitle: '导入备份？',
+    importConfirmMessage: '这将用备份文件的内容替换所有当前的文件夹、任务和设置。',
+    importConfirm: '导入',
+    importErrorTitle: '导入失败',
+    importErrorBody: '无法将此文件识别为有效的备份。',
   },
   completed: {
     emptyState: '还没有已完成的任务。',

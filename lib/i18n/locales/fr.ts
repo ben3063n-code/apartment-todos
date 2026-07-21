@@ -2,6 +2,7 @@ export default {
   common: {
     cancel: 'Annuler',
     delete: 'Supprimer',
+    undo: 'Annuler',
   },
   tabs: {
     folders: 'Dossiers',
@@ -40,6 +41,8 @@ export default {
     noFoldersHint: "Aucun dossier pour l'instant. Créez-en un d'abord.",
     priorityLabel: 'Priorité',
     priorityNone: 'Aucune',
+    estimatedTimeLabel: 'Durée estimée',
+    estimatedTimeNone: 'Aucune',
     priority: {
       '1': 'Très haute',
       '2': 'Haute',
@@ -61,6 +64,7 @@ export default {
     save: 'Enregistrer',
     delete: 'Supprimer la tâche',
     deleteConfirmTitle: 'Supprimer la tâche ?',
+    deletedToast: '« {{title}} » supprimée',
   },
   folderModal: {
     modalTitle: 'Dossier',
@@ -76,9 +80,11 @@ export default {
     todoCount_one: '{{count}} tâche',
     todoCount_other: '{{count}} tâches',
     deleteConfirmMessage: 'Cela supprimera définitivement {{subfolders}} et {{todos}}.',
+    deletedToast: '« {{name}} » supprimé',
   },
   allTodos: {
     sort: { priority: 'Priorité', dueDate: 'Échéance', createdAt: 'Créé', folderName: 'Dossier' },
+    searchPlaceholder: 'Rechercher des tâches…',
   },
   banner: {
     title: 'Tâches du jour',
@@ -101,6 +107,15 @@ export default {
   now: {
     emptyState: "Rien pour l'instant. Touchez l'étoile d'une tâche pour l'ajouter ici.",
     focusHint: 'Reste concentré — garde cette liste courte.',
+    timeBudgetSubtitle_one: 'pour {{count}} tâche',
+    timeBudgetSubtitle_other: 'pour {{count}} tâches',
+    timeBudgetUnestimated_one: '{{count}} tâche sans estimation de temps',
+    timeBudgetUnestimated_other: '{{count}} tâches sans estimation de temps',
+  },
+  duration: {
+    minutesOnly: '{{count}} min',
+    hoursOnly: '{{count}} h',
+    hoursAndMinutes: '{{hours}} h {{minutes}} min',
   },
   settings: {
     appearanceLabel: 'Apparence',
@@ -116,6 +131,14 @@ export default {
     completionMarkLabel: 'Symbole de fin',
     fadeOutDurationLabel: 'Durée du fondu après la fin',
     helpLabel: 'Comment fonctionne l’app',
+    dataLabel: 'Données',
+    exportLabel: 'Exporter une sauvegarde',
+    importLabel: 'Importer une sauvegarde',
+    importConfirmTitle: 'Importer la sauvegarde ?',
+    importConfirmMessage: 'Ceci remplacera tous les dossiers, tâches et réglages actuels par le contenu du fichier de sauvegarde.',
+    importConfirm: 'Importer',
+    importErrorTitle: "Échec de l'importation",
+    importErrorBody: "Ce fichier n'a pas pu être lu comme une sauvegarde valide.",
   },
   completed: {
     emptyState: "Aucune tâche terminée pour l'instant.",

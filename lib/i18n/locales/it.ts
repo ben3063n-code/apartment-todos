@@ -2,6 +2,7 @@ export default {
   common: {
     cancel: 'Annulla',
     delete: 'Elimina',
+    undo: 'Annulla',
   },
   tabs: {
     folders: 'Cartelle',
@@ -40,6 +41,8 @@ export default {
     noFoldersHint: 'Nessuna cartella ancora. Creane una prima.',
     priorityLabel: 'Priorità',
     priorityNone: 'Nessuna',
+    estimatedTimeLabel: 'Durata stimata',
+    estimatedTimeNone: 'Nessuna',
     priority: {
       '1': 'Massima',
       '2': 'Alta',
@@ -61,6 +64,7 @@ export default {
     save: 'Salva',
     delete: 'Elimina attività',
     deleteConfirmTitle: "Eliminare l'attività?",
+    deletedToast: '"{{title}}" eliminata',
   },
   folderModal: {
     modalTitle: 'Cartella',
@@ -76,9 +80,11 @@ export default {
     todoCount_one: '{{count}} attività',
     todoCount_other: '{{count}} attività',
     deleteConfirmMessage: 'Verranno eliminati definitivamente {{subfolders}} e {{todos}}.',
+    deletedToast: '"{{name}}" eliminata',
   },
   allTodos: {
     sort: { priority: 'Priorità', dueDate: 'Scadenza', createdAt: 'Creata', folderName: 'Cartella' },
+    searchPlaceholder: 'Cerca attività…',
   },
   banner: {
     title: 'Attività di oggi',
@@ -101,6 +107,15 @@ export default {
   now: {
     emptyState: 'Ancora niente in coda. Tocca la stella su un’attività per aggiungerla qui.',
     focusHint: 'Resta concentrato — tieni questa lista breve.',
+    timeBudgetSubtitle_one: 'per {{count}} attività',
+    timeBudgetSubtitle_other: 'per {{count}} attività',
+    timeBudgetUnestimated_one: '{{count}} attività senza stima di tempo',
+    timeBudgetUnestimated_other: '{{count}} attività senza stima di tempo',
+  },
+  duration: {
+    minutesOnly: '{{count}} min',
+    hoursOnly: '{{count}} h',
+    hoursAndMinutes: '{{hours}} h {{minutes}} min',
   },
   settings: {
     appearanceLabel: 'Aspetto',
@@ -116,6 +131,14 @@ export default {
     completionMarkLabel: 'Simbolo di completamento',
     fadeOutDurationLabel: 'Durata dissolvenza dopo il completamento',
     helpLabel: 'Come funziona l’app',
+    dataLabel: 'Dati',
+    exportLabel: 'Esporta backup',
+    importLabel: 'Importa backup',
+    importConfirmTitle: 'Importare il backup?',
+    importConfirmMessage: 'Questo sostituirà tutte le cartelle, attività e impostazioni attuali con il contenuto del file di backup.',
+    importConfirm: 'Importa',
+    importErrorTitle: 'Importazione non riuscita',
+    importErrorBody: 'Questo file non è un backup valido.',
   },
   completed: {
     emptyState: 'Ancora nessuna attività completata.',

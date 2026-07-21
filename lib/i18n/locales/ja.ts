@@ -2,6 +2,7 @@ export default {
   common: {
     cancel: 'キャンセル',
     delete: '削除',
+    undo: '元に戻す',
   },
   tabs: {
     folders: 'フォルダ',
@@ -40,6 +41,8 @@ export default {
     noFoldersHint: 'まだフォルダがありません。先に作成してください。',
     priorityLabel: '優先度',
     priorityNone: 'なし',
+    estimatedTimeLabel: '所要時間の見積もり',
+    estimatedTimeNone: 'なし',
     priority: {
       '1': '最高',
       '2': '高',
@@ -61,6 +64,7 @@ export default {
     save: '保存',
     delete: 'タスクを削除',
     deleteConfirmTitle: 'このタスクを削除しますか？',
+    deletedToast: '「{{title}}」を削除しました',
   },
   folderModal: {
     modalTitle: 'フォルダ',
@@ -76,9 +80,11 @@ export default {
     todoCount_one: '{{count}} 件のタスク',
     todoCount_other: '{{count}} 件のタスク',
     deleteConfirmMessage: '{{subfolders}}と{{todos}}が完全に削除されます。',
+    deletedToast: '「{{name}}」を削除しました',
   },
   allTodos: {
     sort: { priority: '優先度', dueDate: '期限', createdAt: '作成日', folderName: 'フォルダ' },
+    searchPlaceholder: 'タスクを検索…',
   },
   banner: {
     title: '今日のタスク',
@@ -101,6 +107,15 @@ export default {
   now: {
     emptyState: 'まだ何もありません。タスクの星マークをタップしてここに追加しましょう。',
     focusHint: '集中しよう――このリストは短く保つのがコツ。',
+    timeBudgetSubtitle_one: 'タスク {{count}} 件分',
+    timeBudgetSubtitle_other: 'タスク {{count}} 件分',
+    timeBudgetUnestimated_one: '時間未設定のタスク {{count}} 件',
+    timeBudgetUnestimated_other: '時間未設定のタスク {{count}} 件',
+  },
+  duration: {
+    minutesOnly: '{{count}} 分',
+    hoursOnly: '{{count}} 時間',
+    hoursAndMinutes: '{{hours}} 時間 {{minutes}} 分',
   },
   settings: {
     appearanceLabel: '外観',
@@ -116,6 +131,14 @@ export default {
     completionMarkLabel: '完了マーク',
     fadeOutDurationLabel: '完了後のフェードアウト時間',
     helpLabel: 'アプリの使い方',
+    dataLabel: 'データ',
+    exportLabel: 'バックアップを書き出す',
+    importLabel: 'バックアップを読み込む',
+    importConfirmTitle: 'バックアップを読み込みますか？',
+    importConfirmMessage: '現在のすべてのフォルダ、タスク、設定がバックアップファイルの内容で置き換えられます。',
+    importConfirm: '読み込む',
+    importErrorTitle: '読み込みに失敗しました',
+    importErrorBody: 'このファイルは有効なバックアップとして読み取れませんでした。',
   },
   completed: {
     emptyState: '完了したタスクはまだありません。',

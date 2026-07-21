@@ -1,9 +1,8 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import type { SortField } from '../lib/models';
 import { editTodoHref } from '../lib/routes';
 import { useStore } from '../lib/store';
 import { useAppTheme } from '../lib/useAppTheme';
@@ -19,9 +18,10 @@ type Props = {
   onToggleSidebar: () => void;
   onDragStart: () => void;
   onDrop: (todoId: string, absoluteY: number) => void;
+  searchQuery: string;
 };
 
-export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, onDragStart, onDrop }: Props) {
+export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, onDragStart, onDrop, searchQuery }: Props) {
   const router = useRouter();
   const { colors } = useAppTheme();
   const { t } = useTranslation();
@@ -29,9 +29,9 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
   const todos = useStore((state) => state.todos);
   const toggleInNow = useStore((state) => state.toggleInNow);
   const showTodayBanner = useStore((state) => state.showTodayBanner);
+  const sortField = useStore((state) => state.allTodosSortField);
+  const setSortField = useStore((state) => state.setAllTodosSortField);
   const { recentlyCompletedIds, handleToggleDone } = useRecentlyCompleted();
-
-  const [sortField, setSortField] = useState<SortField>('createdAt');
 
   const folder = folderId !== 'all' ? folders.find((f) => f.id === folderId) : null;
 
@@ -50,8 +50,13 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
   const visibleTodos = useMemo(() => {
     const isVisible = (todo: (typeof todos)[number]) =>
       (!todo.done || recentlyCompletedIds.has(todo.id)) && !todo.deletedAt;
-    const filtered =
+    let filtered =
       folderId === 'all' ? todos.filter(isVisible) : todos.filter((todo) => todo.folderId === folderId && isVisible(todo));
+
+    const query = searchQuery.trim().toLowerCase();
+    if (query) {
+      filtered = filtered.filter((todo) => todo.title.toLowerCase().includes(query));
+    }
 
     if (folderId !== 'all') {
       return [...filtered].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -77,7 +82,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
       }
       return b.createdAt.localeCompare(a.createdAt);
     });
-  }, [todos, folderId, sortField, folderNameById, recentlyCompletedIds]);
+  }, [todos, folderId, sortField, folderNameById, recentlyCompletedIds, searchQuery]);
 
   if (folderId !== 'all' && !folder) {
     return (

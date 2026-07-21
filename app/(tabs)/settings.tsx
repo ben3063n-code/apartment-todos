@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
+import { BackupControls } from '../../components/BackupControls';
 import { showInfo } from '../../lib/confirm';
 import { LANGUAGE_NAMES } from '../../lib/i18n/languageNames';
 import {
@@ -185,6 +186,13 @@ export default function SettingsScreen() {
           <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.helpLabel')}</Text>
           <Text style={{ color: colors.textMuted }}>›</Text>
         </Pressable>
+      </View>
+
+      <Text style={[styles.sectionLabel, { color: colors.textMuted, marginTop: 24 }]}>
+        {t('settings.dataLabel')}
+      </Text>
+      <View style={[styles.list, { borderColor: colors.border }]}>
+        <BackupControls />
       </View>
     </ScrollView>
   );

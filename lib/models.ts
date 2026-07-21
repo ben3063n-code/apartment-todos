@@ -53,8 +53,11 @@ export type Todo = {
   reminderTime: string | null;
   notificationId: string | null;
   inNowList: boolean;
+  estimatedMinutes: number | null;
   createdAt: string;
   completedAt: string | null;
   done: boolean;
   deletedAt: string | null;
 };
+
+export const DURATION_OPTIONS: number[] = [15, 30, 45, 60, 90, 120, 180, 240];

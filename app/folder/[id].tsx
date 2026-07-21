@@ -8,6 +8,7 @@ import { suggestFolderEmoji } from '../../lib/folderEmoji';
 import { paramToFolderId } from '../../lib/routes';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
+import { useUndoToast } from '../../lib/undoToast';
 
 export default function FolderModal() {
   const params = useLocalSearchParams<{ id: string; parentId?: string }>();
@@ -20,7 +21,9 @@ export default function FolderModal() {
   const addFolder = useStore((state) => state.addFolder);
   const updateFolder = useStore((state) => state.updateFolder);
   const deleteFolder = useStore((state) => state.deleteFolder);
+  const restoreFolder = useStore((state) => state.restoreFolder);
   const getDescendantFolderIds = useStore((state) => state.getDescendantFolderIds);
+  const { showUndo } = useUndoToast();
 
   const isNew = params.id === 'new';
   const existing = isNew ? undefined : folders.find((f) => f.id === params.id);
@@ -66,6 +69,7 @@ export default function FolderModal() {
       () => {
         deleteFolder(existing.id);
         router.back();
+        showUndo(t('folderModal.deletedToast', { name: existing.name }), () => restoreFolder(existing.id));
       }
     );
   };

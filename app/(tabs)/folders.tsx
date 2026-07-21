@@ -11,6 +11,7 @@ export default function FoldersScreen() {
   const { colors } = useAppTheme();
   const [selectedFolderId, setSelectedFolderId] = useState<string | 'all'>('all');
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const { registerFolderRowRef, measureDropZones, handleDrop, findZoneAt } = useFolderDropZones();
 
   return (
@@ -31,8 +32,9 @@ export default function FoldersScreen() {
         onToggleSidebar={() => setSidebarVisible((prev) => !prev)}
         onDragStart={measureDropZones}
         onDrop={handleDrop}
+        searchQuery={searchQuery}
       />
-      <FolderFabRow folderId={selectedFolderId} />
+      <FolderFabRow folderId={selectedFolderId} searchQuery={searchQuery} onSearchChange={setSearchQuery} />
     </View>
   );
 }

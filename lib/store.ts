@@ -7,7 +7,17 @@ import { suggestFolderEmoji } from './folderEmoji';
 import { createId } from './id';
 import { resolveLanguage } from './i18n/resolveLanguage';
 import { cancelReminder, scheduleReminder } from './notifications';
-import type { AccentColor, CompletionMark, Folder, Language, Priority, Recurrence, ThemePreference, Todo } from './models';
+import type {
+  AccentColor,
+  CompletionMark,
+  Folder,
+  Language,
+  Priority,
+  Recurrence,
+  SortField,
+  ThemePreference,
+  Todo,
+} from './models';
 import { advanceDueDate } from './recurrence';
 
 type NewTodoInput = {
@@ -20,6 +30,7 @@ type NewTodoInput = {
   reminderEnabled: boolean;
   reminderTime: string | null;
   notificationId: string | null;
+  estimatedMinutes: number | null;
 };
 
 type TodoPatch = Partial<
@@ -35,6 +46,7 @@ type TodoPatch = Partial<
     | 'reminderTime'
     | 'notificationId'
     | 'inNowList'
+    | 'estimatedMinutes'
   >
 >;
 
@@ -46,6 +58,7 @@ type Store = {
   accentColor: AccentColor;
   completionMark: CompletionMark;
   fadeOutDuration: number;
+  allTodosSortField: SortField;
   language: Language;
   showTodayBanner: boolean;
   hasHydrated: boolean;
@@ -78,6 +91,7 @@ type Store = {
   setAccentColor: (value: AccentColor) => void;
   setCompletionMark: (value: CompletionMark) => void;
   setFadeOutDuration: (value: number) => void;
+  setAllTodosSortField: (value: SortField) => void;
   setLanguage: (language: Language) => void;
   setShowTodayBanner: (value: boolean) => void;
 };
@@ -92,6 +106,7 @@ export const useStore = create<Store>()(
       accentColor: 'monochrome',
       completionMark: 'check',
       fadeOutDuration: 1200,
+      allTodosSortField: 'createdAt',
       language: 'auto',
       showTodayBanner: true,
       hasHydrated: false,
@@ -106,19 +121,24 @@ export const useStore = create<Store>()(
           get().addFolder(name, null, suggestFolderEmoji(name));
         }
         const onboardingId = get().addFolder(data.onboardingFolderName, null, ONBOARDING_FOLDER_EMOJI);
-        for (const title of data.onboardingTodos) {
-          get().addTodo({
+        const demoEstimatedMinutes: (number | null)[] = [null, 15, null, 30, 45, null];
+        const demoInNowList = [false, true, false, true, true, false];
+        const demoPriority: (Priority | null)[] = [null, 1, null, 3, 5, null];
+        data.onboardingTodos.forEach((title, index) => {
+          const todoId = get().addTodo({
             title,
             folderId: onboardingId,
-            priority: null,
+            priority: demoPriority[index] ?? null,
             dueDate: null,
             dueTime: null,
             recurrence: null,
             reminderEnabled: false,
             reminderTime: null,
             notificationId: null,
+            estimatedMinutes: demoEstimatedMinutes[index] ?? null,
           });
-        }
+          if (demoInNowList[index]) get().toggleInNow(todoId);
+        });
         set({ hasSeededDefaults: true, onboardingFolderId: onboardingId });
       },
 
@@ -223,6 +243,7 @@ export const useStore = create<Store>()(
           reminderTime: input.reminderTime,
           notificationId: input.notificationId,
           inNowList: false,
+          estimatedMinutes: input.estimatedMinutes,
           createdAt: new Date().toISOString(),
           completedAt: null,
           done: false,
@@ -273,6 +294,7 @@ export const useStore = create<Store>()(
             reminderTime: current.reminderTime,
             notificationId: null,
             inNowList: false,
+            estimatedMinutes: current.estimatedMinutes,
             createdAt: new Date().toISOString(),
             completedAt: null,
             done: false,
@@ -334,6 +356,7 @@ export const useStore = create<Store>()(
       setAccentColor: (value) => set({ accentColor: value }),
       setCompletionMark: (value) => set({ completionMark: value }),
       setFadeOutDuration: (value) => set({ fadeOutDuration: value }),
+      setAllTodosSortField: (value) => set({ allTodosSortField: value }),
       setLanguage: (language) => set({ language }),
       setShowTodayBanner: (value) => set({ showTodayBanner: value }),
     }),
@@ -341,6 +364,7 @@ export const useStore = create<Store>()(
       name: 'apartment-todos',
       version: 3,
       storage: createJSONStorage(() => AsyncStorage),
+      migrate: (persistedState) => persistedState as Store,
       partialize: (state) => ({
         folders: state.folders,
         todos: state.todos,
@@ -349,6 +373,7 @@ export const useStore = create<Store>()(
         accentColor: state.accentColor,
         completionMark: state.completionMark,
         fadeOutDuration: state.fadeOutDuration,
+        allTodosSortField: state.allTodosSortField,
         language: state.language,
         showTodayBanner: state.showTodayBanner,
         hasSeededDefaults: state.hasSeededDefaults,
