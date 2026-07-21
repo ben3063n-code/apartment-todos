@@ -96,7 +96,7 @@ export function FolderRow({
 
   const handleDelete = () => {
     const descendantIds = new Set(getDescendantFolderIds(folder.id));
-    const affectedTodos = todos.filter((todo) => descendantIds.has(todo.folderId) && !todo.deletedAt).length;
+    const affectedTodos = todos.filter((todo) => !!todo.folderId && descendantIds.has(todo.folderId) && !todo.deletedAt).length;
     const subfolderCount = descendantIds.size - 1;
 
     confirmDestructive(

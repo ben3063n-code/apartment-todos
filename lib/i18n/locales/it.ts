@@ -38,6 +38,7 @@ export default {
     titlePlaceholder: "Cosa c'è da fare?",
     folderLabel: 'Cartella',
     folderTopLevelOption: 'Livello principale',
+    unassignedOption: 'Nessuna cartella',
     folderPlaceholder: 'Scegli una cartella…',
     noFoldersHint: 'Nessuna cartella ancora. Creane una prima.',
     priorityLabel: 'Priorità',

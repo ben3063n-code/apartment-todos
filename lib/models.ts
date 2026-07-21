@@ -49,7 +49,7 @@ export const RECURRENCE_OPTIONS: Recurrence[] = ['daily', 'weekly', 'monthly', '
 export type Todo = {
   id: string;
   title: string;
-  folderId: string;
+  folderId: string | null;
   priority: Priority | null;
   dueDate: string | null;
   dueTime: string | null;

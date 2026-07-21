@@ -23,7 +23,7 @@ import { advanceDueDate } from './recurrence';
 
 type NewTodoInput = {
   title: string;
-  folderId: string;
+  folderId: string | null;
   priority: Priority | null;
   dueDate: string | null;
   dueTime: string | null;
@@ -191,14 +191,13 @@ export const useStore = create<Store>()(
       deleteFolder: (id) => {
         const idsToDelete = new Set(get().getDescendantFolderIds(id));
         const now = new Date().toISOString();
-        const affectedTodos = get().todos.filter((todo) => idsToDelete.has(todo.folderId) && !todo.deletedAt);
+        const inScope = (todo: Todo) => todo.folderId !== null && idsToDelete.has(todo.folderId);
+        const affectedTodos = get().todos.filter((todo) => inScope(todo) && !todo.deletedAt);
         for (const todo of affectedTodos) cancelReminder(todo.notificationId);
         set((state) => ({
           folders: state.folders.map((folder) => (idsToDelete.has(folder.id) ? { ...folder, deletedAt: now } : folder)),
           todos: state.todos.map((todo) =>
-            idsToDelete.has(todo.folderId) && !todo.deletedAt
-              ? { ...todo, deletedAt: now, notificationId: null }
-              : todo
+            inScope(todo) && !todo.deletedAt ? { ...todo, deletedAt: now, notificationId: null } : todo
           ),
         }));
       },
@@ -208,17 +207,20 @@ export const useStore = create<Store>()(
         for (const ancestorId of get().getAncestorFolderIds(id)) idsToRestore.add(ancestorId);
         set((state) => ({
           folders: state.folders.map((folder) => (idsToRestore.has(folder.id) ? { ...folder, deletedAt: null } : folder)),
-          todos: state.todos.map((todo) => (idsToRestore.has(todo.folderId) ? { ...todo, deletedAt: null } : todo)),
+          todos: state.todos.map((todo) =>
+            todo.folderId !== null && idsToRestore.has(todo.folderId) ? { ...todo, deletedAt: null } : todo
+          ),
         }));
       },
 
       permanentlyDeleteFolder: (id) => {
         const idsToDelete = new Set(get().getDescendantFolderIds(id));
-        const removedTodos = get().todos.filter((todo) => idsToDelete.has(todo.folderId));
+        const inScope = (todo: Todo) => todo.folderId !== null && idsToDelete.has(todo.folderId);
+        const removedTodos = get().todos.filter(inScope);
         for (const todo of removedTodos) cancelReminder(todo.notificationId);
         set((state) => ({
           folders: state.folders.filter((folder) => !idsToDelete.has(folder.id)),
-          todos: state.todos.filter((todo) => !idsToDelete.has(todo.folderId)),
+          todos: state.todos.filter((todo) => !inScope(todo)),
         }));
       },
 

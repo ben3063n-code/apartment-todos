@@ -59,7 +59,7 @@ export default function FolderModal() {
   const handleDelete = () => {
     if (!existing) return;
     const descendantIds = new Set(getDescendantFolderIds(existing.id));
-    const affectedTodos = todos.filter((todo) => descendantIds.has(todo.folderId)).length;
+    const affectedTodos = todos.filter((todo) => !!todo.folderId && descendantIds.has(todo.folderId)).length;
     const subfolderCount = descendantIds.size - 1;
 
     confirmDestructive(

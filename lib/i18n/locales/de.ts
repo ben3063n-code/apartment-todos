@@ -38,6 +38,7 @@ export default {
     titlePlaceholder: 'Was ist zu tun?',
     folderLabel: 'Ordner',
     folderTopLevelOption: 'Oberste Ebene',
+    unassignedOption: 'Kein Ordner',
     folderPlaceholder: 'Ordner wählen…',
     noFoldersHint: 'Noch kein Ordner vorhanden. Zuerst einen anlegen.',
     priorityLabel: 'Priorität',

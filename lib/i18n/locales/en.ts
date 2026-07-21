@@ -38,6 +38,7 @@ export default {
     titlePlaceholder: 'What needs to be done?',
     folderLabel: 'Folder',
     folderTopLevelOption: 'Top level',
+    unassignedOption: 'No folder',
     folderPlaceholder: 'Choose a folder…',
     noFoldersHint: 'No folders yet. Create one first.',
     priorityLabel: 'Priority',

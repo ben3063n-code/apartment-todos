@@ -86,7 +86,7 @@ export default function NowScreen() {
             onToggle={() => toggleDone(item.id)}
             onToggleNow={() => toggleInNow(item.id)}
             onPress={() => router.push(editTodoHref(item.id))}
-            folderLabel={folderLabelById.get(item.folderId)}
+            folderLabel={item.folderId ? folderLabelById.get(item.folderId) : undefined}
           />
         )}
       />

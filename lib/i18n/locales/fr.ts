@@ -38,6 +38,7 @@ export default {
     titlePlaceholder: 'Que faut-il faire ?',
     folderLabel: 'Dossier',
     folderTopLevelOption: 'Niveau supérieur',
+    unassignedOption: 'Sans dossier',
     folderPlaceholder: 'Choisir un dossier…',
     noFoldersHint: "Aucun dossier pour l'instant. Créez-en un d'abord.",
     priorityLabel: 'Priorité',

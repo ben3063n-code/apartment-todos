@@ -56,7 +56,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
       (!todo.done || recentlyCompletedIds.has(todo.id)) && !todo.deletedAt;
     let filtered =
       folderId === 'all'
-        ? todos.filter((todo) => isVisible(todo) && !listKindFolderIds.has(todo.folderId))
+        ? todos.filter((todo) => isVisible(todo) && (!todo.folderId || !listKindFolderIds.has(todo.folderId)))
         : todos.filter((todo) => todo.folderId === folderId && isVisible(todo));
 
     const query = searchQuery.trim().toLowerCase();
@@ -82,8 +82,8 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
         return a.dueDate.localeCompare(b.dueDate);
       }
       if (sortField === 'folderName') {
-        const aName = folderNameById.get(a.folderId) ?? '';
-        const bName = folderNameById.get(b.folderId) ?? '';
+        const aName = a.folderId ? folderNameById.get(a.folderId) ?? '' : '';
+        const bName = b.folderId ? folderNameById.get(b.folderId) ?? '' : '';
         return aName.localeCompare(bName);
       }
       return b.createdAt.localeCompare(a.createdAt);
@@ -126,7 +126,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
                 onToggle={() => handleToggleDone(item.id, item.done)}
                 onToggleNow={() => toggleInNow(item.id)}
                 onPress={() => router.push(editTodoHref(item.id))}
-                folderLabel={folderLabelById.get(item.folderId)}
+                folderLabel={item.folderId ? folderLabelById.get(item.folderId) : undefined}
                 justCompleted={recentlyCompletedIds.has(item.id)}
                 onDragStart={onDragStart}
                 onDrop={(absoluteY) => onDrop(item.id, absoluteY)}

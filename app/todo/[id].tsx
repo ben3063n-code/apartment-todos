@@ -44,7 +44,7 @@ export default function TodoModal() {
   const [reminderTime, setReminderTime] = useState(existing?.reminderTime ?? '09:00');
   const [reminderDenied, setReminderDenied] = useState(false);
 
-  const canSave = useMemo(() => title.trim().length > 0 && folderId !== null, [title, folderId]);
+  const canSave = useMemo(() => title.trim().length > 0, [title]);
 
   const handleToggleReminder = async (next: boolean) => {
     if (!dueDate) return;
@@ -63,7 +63,7 @@ export default function TodoModal() {
   };
 
   const handleSave = async () => {
-    if (!canSave || !folderId) return;
+    if (!canSave) return;
 
     if (existing?.notificationId) cancelReminder(existing.notificationId);
 
@@ -116,7 +116,7 @@ export default function TodoModal() {
       />
 
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.folderLabel')}</Text>
-      <FolderPicker value={folderId} onChange={setFolderId} />
+      <FolderPicker value={folderId} onChange={setFolderId} allowTopLevel topLevelLabel={t('todo.unassignedOption')} />
 
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.priorityLabel')}</Text>
       <PriorityPicker value={priority} onChange={setPriority} />

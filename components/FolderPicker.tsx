@@ -10,10 +10,11 @@ type Props = {
   value: string | null;
   onChange: (value: string | null) => void;
   allowTopLevel?: boolean;
+  topLevelLabel?: string;
   excludeIds?: string[];
 };
 
-export function FolderPicker({ value, onChange, allowTopLevel, excludeIds }: Props) {
+export function FolderPicker({ value, onChange, allowTopLevel, topLevelLabel, excludeIds }: Props) {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
   const folders = useStore((state) => state.folders);
@@ -22,6 +23,7 @@ export function FolderPicker({ value, onChange, allowTopLevel, excludeIds }: Pro
   const excluded = new Set(excludeIds ?? []);
   const flatFolders = flattenFolderTree(folders.filter((f) => !f.deletedAt && !excluded.has(f.id)));
   const selected = value ? folders.find((f) => f.id === value) : null;
+  const resolvedTopLevelLabel = topLevelLabel ?? t('todo.folderTopLevelOption');
 
   return (
     <View>
@@ -30,7 +32,7 @@ export function FolderPicker({ value, onChange, allowTopLevel, excludeIds }: Pro
         onPress={() => setExpanded((prev) => !prev)}
       >
         <Text style={{ color: selected ? colors.text : colors.textMuted, fontSize: 16 }} numberOfLines={1}>
-          {selected ? `${selected.emoji} ${selected.name}` : allowTopLevel ? t('todo.folderTopLevelOption') : t('todo.folderPlaceholder')}
+          {selected ? `${selected.emoji} ${selected.name}` : allowTopLevel ? resolvedTopLevelLabel : t('todo.folderPlaceholder')}
         </Text>
         <Text style={{ color: colors.textMuted }}>{expanded ? '▴' : '▾'}</Text>
       </Pressable>
@@ -45,7 +47,7 @@ export function FolderPicker({ value, onChange, allowTopLevel, excludeIds }: Pro
                 setExpanded(false);
               }}
             >
-              <Text style={{ color: colors.text }}>{t('todo.folderTopLevelOption')}</Text>
+              <Text style={{ color: colors.text }}>{resolvedTopLevelLabel}</Text>
             </Pressable>
           )}
           {flatFolders.map(({ folder, depth }) => (

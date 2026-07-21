@@ -38,6 +38,7 @@ export default {
     titlePlaceholder: '需要做什么？',
     folderLabel: '文件夹',
     folderTopLevelOption: '顶层',
+    unassignedOption: '无文件夹',
     folderPlaceholder: '选择一个文件夹…',
     noFoldersHint: '还没有文件夹，请先创建一个。',
     priorityLabel: '优先级',

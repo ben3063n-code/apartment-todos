@@ -38,6 +38,7 @@ export default {
     titlePlaceholder: 'やることは？',
     folderLabel: 'フォルダ',
     folderTopLevelOption: 'トップレベル',
+    unassignedOption: 'フォルダなし',
     folderPlaceholder: 'フォルダを選択…',
     noFoldersHint: 'まだフォルダがありません。先に作成してください。',
     priorityLabel: '優先度',
