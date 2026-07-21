@@ -45,6 +45,7 @@ type Store = {
   brightness: number;
   accentColor: AccentColor;
   completionMark: CompletionMark;
+  fadeOutDuration: number;
   language: Language;
   showTodayBanner: boolean;
   hasHydrated: boolean;
@@ -76,6 +77,7 @@ type Store = {
   setBrightness: (value: number) => void;
   setAccentColor: (value: AccentColor) => void;
   setCompletionMark: (value: CompletionMark) => void;
+  setFadeOutDuration: (value: number) => void;
   setLanguage: (language: Language) => void;
   setShowTodayBanner: (value: boolean) => void;
 };
@@ -89,6 +91,7 @@ export const useStore = create<Store>()(
       brightness: 0.5,
       accentColor: 'monochrome',
       completionMark: 'check',
+      fadeOutDuration: 1200,
       language: 'auto',
       showTodayBanner: true,
       hasHydrated: false,
@@ -330,6 +333,7 @@ export const useStore = create<Store>()(
       setBrightness: (value) => set({ brightness: value }),
       setAccentColor: (value) => set({ accentColor: value }),
       setCompletionMark: (value) => set({ completionMark: value }),
+      setFadeOutDuration: (value) => set({ fadeOutDuration: value }),
       setLanguage: (language) => set({ language }),
       setShowTodayBanner: (value) => set({ showTodayBanner: value }),
     }),
@@ -344,6 +348,7 @@ export const useStore = create<Store>()(
         brightness: state.brightness,
         accentColor: state.accentColor,
         completionMark: state.completionMark,
+        fadeOutDuration: state.fadeOutDuration,
         language: state.language,
         showTodayBanner: state.showTodayBanner,
         hasSeededDefaults: state.hasSeededDefaults,

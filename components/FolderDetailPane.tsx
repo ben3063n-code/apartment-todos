@@ -31,7 +31,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
   const showTodayBanner = useStore((state) => state.showTodayBanner);
   const { recentlyCompletedIds, handleToggleDone } = useRecentlyCompleted();
 
-  const [sortField, setSortField] = useState<SortField>('priority');
+  const [sortField, setSortField] = useState<SortField>('createdAt');
 
   const folder = folderId !== 'all' ? folders.find((f) => f.id === folderId) : null;
 

@@ -111,7 +111,10 @@ export default {
     language: { auto: 'Automatico (dispositivo)' },
     generalLabel: 'Generale',
     showBannerLabel: 'Mostra riepilogo giornaliero',
+    bannerInfoTitle: "Cos'è il riepilogo giornaliero?",
+    bannerInfoBody: 'Un banner in cima a "Tutti i ToDo" che mostra le attività in scadenza oggi insieme a una breve citazione motivazionale — tutto a colpo d\'occhio.',
     completionMarkLabel: 'Simbolo di completamento',
+    fadeOutDurationLabel: 'Durata dissolvenza dopo il completamento',
     helpLabel: 'Come funziona l’app',
   },
   completed: {

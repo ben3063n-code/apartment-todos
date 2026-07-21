@@ -111,7 +111,10 @@ export default {
     language: { auto: '自动（跟随设备）' },
     generalLabel: '通用',
     showBannerLabel: '显示每日概览',
+    bannerInfoTitle: '每日概览是什么？',
+    bannerInfoBody: '显示在"所有待办"顶部的横幅，展示今天到期的任务和一句简短的激励语——一目了然，无需查找。',
     completionMarkLabel: '完成标记',
+    fadeOutDurationLabel: '完成后的淡出时长',
     helpLabel: '应用使用说明',
   },
   completed: {

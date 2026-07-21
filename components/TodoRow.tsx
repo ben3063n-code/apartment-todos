@@ -22,15 +22,17 @@ type Props = {
 export function TodoRow({ todo, onToggle, onPress, onToggleNow, folderLabel, justCompleted }: Props) {
   const { colors } = useAppTheme();
   const completionMark = useStore((state) => state.completionMark);
+  const fadeOutDuration = useStore((state) => state.fadeOutDuration);
   const fade = useSharedValue(1);
 
   useEffect(() => {
     if (justCompleted) {
-      fade.value = withDelay(400, withTiming(0, { duration: 2600 }));
+      const delay = Math.min(300, fadeOutDuration * 0.25);
+      fade.value = withDelay(delay, withTiming(0, { duration: fadeOutDuration - delay }));
     } else {
       fade.value = 1;
     }
-  }, [justCompleted]);
+  }, [justCompleted, fadeOutDuration]);
 
   const animatedStyle = useAnimatedStyle(() => ({ opacity: fade.value }));
 

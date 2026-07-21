@@ -4,7 +4,7 @@ export const PRIORITY_LEVELS: Priority[] = [1, 2, 3, 4, 5];
 
 export type SortField = 'priority' | 'dueDate' | 'createdAt' | 'folderName';
 
-export const SORT_FIELDS: SortField[] = ['priority', 'dueDate', 'createdAt', 'folderName'];
+export const SORT_FIELDS: SortField[] = ['createdAt', 'priority', 'dueDate', 'folderName'];
 
 export type CompletedSortField = 'createdAt' | 'completedAt';
 

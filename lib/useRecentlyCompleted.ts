@@ -4,6 +4,7 @@ import { useStore } from './store';
 
 export function useRecentlyCompleted() {
   const toggleDone = useStore((state) => state.toggleDone);
+  const fadeOutDuration = useStore((state) => state.fadeOutDuration);
   const [recentlyCompletedIds, setRecentlyCompletedIds] = useState<Set<string>>(new Set());
   const timeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
@@ -21,7 +22,7 @@ export function useRecentlyCompleted() {
           return next;
         });
         timeoutsRef.current.delete(id);
-      }, 3000);
+      }, fadeOutDuration);
       timeoutsRef.current.set(id, timeout);
     } else {
       setRecentlyCompletedIds((prev) => {

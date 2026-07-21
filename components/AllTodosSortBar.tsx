@@ -25,14 +25,16 @@ export function AllTodosSortBar({ sortField, onChange }: Props) {
         return (
           <Pressable
             key={field}
-            style={[
-              styles.chip,
-              { borderColor: colors.border },
-              active && { backgroundColor: colors.accent, borderColor: colors.accent },
-            ]}
+            style={[styles.chip, active && { borderBottomColor: colors.accent }]}
             onPress={() => onChange(field)}
           >
-            <Text style={{ color: active ? colors.accentText : colors.text, fontSize: 10, fontWeight: '600' }}>
+            <Text
+              style={{
+                color: active ? colors.accent : colors.textMuted,
+                fontSize: 11,
+                fontWeight: active ? '600' : '400',
+              }}
+            >
               {t(`allTodos.sort.${field}`)}
             </Text>
           </Pressable>
@@ -43,7 +45,7 @@ export function AllTodosSortBar({ sortField, onChange }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 0, flexShrink: 0, height: 30 },
-  row: { paddingHorizontal: 16, gap: 6, paddingBottom: 6, alignItems: 'center' },
-  chip: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 10, borderWidth: 1 },
+  container: { flexGrow: 0, flexShrink: 0, height: 28 },
+  row: { paddingHorizontal: 16, gap: 16, paddingBottom: 6, alignItems: 'center' },
+  chip: { paddingBottom: 2, borderBottomWidth: 2, borderBottomColor: 'transparent' },
 });

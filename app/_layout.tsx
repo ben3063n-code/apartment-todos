@@ -1,8 +1,8 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -20,6 +20,13 @@ export default function RootLayout() {
   const language = useStore((state) => state.language);
   const { scheme, colors } = useAppTheme();
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const closeButton = () => (
+    <Pressable onPress={() => router.back()} hitSlop={10} style={{ paddingHorizontal: 6, paddingVertical: 4 }}>
+      <Text style={{ fontSize: 20, color: colors.text }}>✕</Text>
+    </Pressable>
+  );
 
   useEffect(() => {
     if (!hasHydrated) return;
@@ -43,6 +50,7 @@ export default function RootLayout() {
               title: t('todo.modalTitle'),
               headerStyle: { backgroundColor: colors.surface },
               headerTintColor: colors.text,
+              headerLeft: closeButton,
             }}
           />
           <Stack.Screen
@@ -53,6 +61,7 @@ export default function RootLayout() {
               title: t('folderModal.modalTitle'),
               headerStyle: { backgroundColor: colors.surface },
               headerTintColor: colors.text,
+              headerLeft: closeButton,
             }}
           />
           <Stack.Screen

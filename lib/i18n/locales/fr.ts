@@ -111,7 +111,10 @@ export default {
     language: { auto: 'Automatique (appareil)' },
     generalLabel: 'Général',
     showBannerLabel: "Afficher l'aperçu quotidien",
+    bannerInfoTitle: "Qu'est-ce que l'aperçu quotidien ?",
+    bannerInfoBody: "Une bannière en haut de « Tous les ToDo » qui affiche les tâches dues aujourd'hui avec une courte citation motivante — tout en un coup d'œil.",
     completionMarkLabel: 'Symbole de fin',
+    fadeOutDurationLabel: 'Durée du fondu après la fin',
     helpLabel: 'Comment fonctionne l’app',
   },
   completed: {

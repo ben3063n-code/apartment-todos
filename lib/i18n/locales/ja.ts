@@ -111,7 +111,10 @@ export default {
     language: { auto: '自動（デバイスに従う）' },
     generalLabel: '一般',
     showBannerLabel: '毎日の概要を表示',
+    bannerInfoTitle: '毎日の概要とは？',
+    bannerInfoBody: '「すべてのToDo」の上部に表示されるバナーで、今日期限のタスクと短い応援メッセージを一目で確認できます。',
     completionMarkLabel: '完了マーク',
+    fadeOutDurationLabel: '完了後のフェードアウト時間',
     helpLabel: 'アプリの使い方',
   },
   completed: {

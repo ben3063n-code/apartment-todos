@@ -21,3 +21,12 @@ export function confirmDestructive(
     { text: confirmLabel, style: 'destructive', onPress: onConfirm },
   ]);
 }
+
+export function showInfo(title: string, message: string) {
+  if (Platform.OS === 'web') {
+    window.alert(`${title}\n\n${message}`);
+    return;
+  }
+
+  Alert.alert(title, message);
+}

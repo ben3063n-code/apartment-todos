@@ -111,7 +111,10 @@ export default {
     language: { auto: 'Automatisch (Gerät)' },
     generalLabel: 'Allgemein',
     showBannerLabel: 'Tagesübersicht anzeigen',
+    bannerInfoTitle: 'Was ist die Tagesübersicht?',
+    bannerInfoBody: 'Ein Banner oben in "Alle ToDos", das deine heute fälligen Aufgaben zusammen mit einem kurzen Tagesspruch zeigt — auf einen Blick, ohne suchen zu müssen.',
     completionMarkLabel: 'Erledigt-Symbol',
+    fadeOutDurationLabel: 'Ausblenddauer nach Erledigen',
     helpLabel: 'So funktioniert die App',
   },
   completed: {

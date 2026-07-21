@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
+import { showInfo } from '../../lib/confirm';
 import { LANGUAGE_NAMES } from '../../lib/i18n/languageNames';
 import {
   ACCENT_COLORS,
@@ -35,6 +36,8 @@ export default function SettingsScreen() {
   const setShowTodayBanner = useStore((state) => state.setShowTodayBanner);
   const completionMark = useStore((state) => state.completionMark);
   const setCompletionMark = useStore((state) => state.setCompletionMark);
+  const fadeOutDuration = useStore((state) => state.fadeOutDuration);
+  const setFadeOutDuration = useStore((state) => state.setFadeOutDuration);
 
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
@@ -128,7 +131,15 @@ export default function SettingsScreen() {
       </Text>
       <View style={[styles.list, { borderColor: colors.border }]}>
         <View style={styles.row}>
-          <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.showBannerLabel')}</Text>
+          <View style={styles.labelWithInfo}>
+            <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.showBannerLabel')}</Text>
+            <Pressable
+              hitSlop={8}
+              onPress={() => showInfo(t('settings.bannerInfoTitle'), t('settings.bannerInfoBody'))}
+            >
+              <Text style={{ color: colors.textMuted, fontSize: 14 }}>ⓘ</Text>
+            </Pressable>
+          </View>
           <Switch value={showTodayBanner} onValueChange={setShowTodayBanner} />
         </View>
         <View style={[styles.row, styles.rowBorder, { borderTopColor: colors.border }]}>
@@ -150,6 +161,25 @@ export default function SettingsScreen() {
               </Pressable>
             ))}
           </View>
+        </View>
+        <View style={[styles.row, styles.rowBorder, { borderTopColor: colors.border }]}>
+          <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.fadeOutDurationLabel')}</Text>
+        </View>
+        <View style={[styles.fadeSliderRow, { borderTopColor: colors.border }]}>
+          <Slider
+            style={styles.fadeSlider}
+            value={fadeOutDuration}
+            minimumValue={300}
+            maximumValue={3000}
+            step={100}
+            onValueChange={setFadeOutDuration}
+            minimumTrackTintColor={colors.accent}
+            maximumTrackTintColor={colors.border}
+            thumbTintColor={colors.accent}
+          />
+          <Text style={{ color: colors.textMuted, fontSize: 12, width: 34, textAlign: 'right' }}>
+            {(fadeOutDuration / 1000).toFixed(1)}s
+          </Text>
         </View>
         <Pressable style={[styles.row, styles.rowBorder, { borderTopColor: colors.border }]} onPress={() => router.push('/help')}>
           <Text style={{ color: colors.text, fontSize: 15 }}>{t('settings.helpLabel')}</Text>
@@ -176,4 +206,7 @@ const styles = StyleSheet.create({
   rowBorder: { borderTopWidth: 1 },
   miniSegmented: { flexDirection: 'row', borderRadius: 8, borderWidth: 1, overflow: 'hidden' },
   miniSegment: { paddingHorizontal: 12, paddingVertical: 6 },
+  fadeSliderRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingBottom: 11 },
+  fadeSlider: { flex: 1, height: 28 },
+  labelWithInfo: { flexDirection: 'row', alignItems: 'center', gap: 6 },
 });

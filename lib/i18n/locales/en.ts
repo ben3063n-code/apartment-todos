@@ -111,7 +111,10 @@ export default {
     language: { auto: 'Automatic (device)' },
     generalLabel: 'General',
     showBannerLabel: 'Show daily overview',
+    bannerInfoTitle: 'What is the daily overview?',
+    bannerInfoBody: 'A banner at the top of "All ToDos" showing tasks due today alongside a short motivational quote — everything at a glance, no searching needed.',
     completionMarkLabel: 'Completion mark',
+    fadeOutDurationLabel: 'Fade-out duration after completing',
     helpLabel: 'How this app works',
   },
   completed: {
