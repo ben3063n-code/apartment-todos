@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PriorityBadge } from '../../components/PriorityBadge';
 import { confirmDestructive } from '../../lib/confirm';
@@ -47,6 +48,7 @@ export default function TrashScreen() {
 function CompletedList() {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const todos = useStore((state) => state.todos);
   const folders = useStore((state) => state.folders);
   const toggleDone = useStore((state) => state.toggleDone);
@@ -95,7 +97,7 @@ function CompletedList() {
       <FlatList
         data={completedTodos}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[styles.list, { paddingBottom: 16 + insets.bottom }]}
         ListEmptyComponent={
           <Text style={[styles.emptyState, { color: colors.textMuted }]}>{t('completed.emptyState')}</Text>
         }
@@ -141,6 +143,7 @@ function CompletedList() {
 function DeletedList() {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const folders = useStore((state) => state.folders);
   const todos = useStore((state) => state.todos);
   const restoreFolder = useStore((state) => state.restoreFolder);
@@ -183,7 +186,7 @@ function DeletedList() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.list}>
+    <ScrollView contentContainerStyle={[styles.list, { paddingBottom: 16 + insets.bottom }]}>
       {!isEmpty && (
         <Pressable style={[styles.emptyTrashButton, { borderColor: colors.danger }]} onPress={handleEmptyTrash}>
           <Text style={{ color: colors.danger, fontWeight: '600', fontSize: 13 }}>{t('trash.emptyButton')}</Text>

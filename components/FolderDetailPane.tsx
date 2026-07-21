@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { showUpsell } from '../lib/confirm';
 import { authenticateForFolder } from '../lib/folderAuth';
@@ -27,6 +28,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
   const router = useRouter();
   const { colors } = useAppTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const folders = useStore((state) => state.folders);
   const todos = useStore((state) => state.todos);
   const getDescendantFolderIds = useStore((state) => state.getDescendantFolderIds);
@@ -173,7 +175,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
           <FlatList
             data={visibleTodos}
             keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={[styles.scrollContent, { paddingBottom: 90 + insets.bottom }]}
             ListEmptyComponent={
               <Text style={[styles.empty, { color: colors.textMuted }]}>{t('folders.emptyFolderState')}</Text>
             }

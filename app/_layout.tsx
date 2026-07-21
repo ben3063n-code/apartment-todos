@@ -2,7 +2,7 @@ import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -34,6 +34,12 @@ export default function RootLayout() {
     i18n.changeLanguage(resolveLanguage(language));
   }, [hasHydrated, language]);
 
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    document.documentElement.style.backgroundColor = colors.background;
+    document.body.style.backgroundColor = colors.background;
+  }, [colors.background]);
+
   if (!hasHydrated) {
     return <View style={{ flex: 1, backgroundColor: colors.background }} />;
   }
@@ -42,7 +48,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <UndoToastProvider>
-          <Stack screenOptions={{ headerShown: false }}>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen
               name="todo/[id]"

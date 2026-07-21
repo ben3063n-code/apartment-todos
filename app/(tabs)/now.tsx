@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PriorityBadge } from '../../components/PriorityBadge';
 import { TodoRow } from '../../components/TodoRow';
@@ -22,6 +23,7 @@ export default function NowScreen() {
   const toggleDone = useStore((state) => state.toggleDone);
   const endFocusSession = useStore((state) => state.endFocusSession);
   const isPro = useStore((state) => state.isPro);
+  const insets = useSafeAreaInsets();
 
   const handleToggleInNow = (id: string) => {
     const result = attemptToggleInNow(id);
@@ -90,7 +92,7 @@ export default function NowScreen() {
       <FlatList
         data={rest}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[styles.list, { paddingBottom: insets.bottom }]}
         renderItem={({ item }) => (
           <TodoRow
             todo={item}

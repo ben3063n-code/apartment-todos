@@ -2,6 +2,7 @@ import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackupControls } from '../../components/BackupControls';
 import { DefaultFolderPicker } from '../../components/DefaultFolderPicker';
@@ -48,9 +49,13 @@ export default function SettingsScreen() {
   const tabBarAccentColor = useStore((state) => state.tabBarAccentColor);
   const setTabBarAccentColor = useStore((state) => state.setTabBarAccentColor);
   const isPro = useStore((state) => state.isPro);
+  const insets = useSafeAreaInsets();
 
   return (
-    <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
+    <ScrollView
+      style={{ backgroundColor: colors.background }}
+      contentContainerStyle={[styles.container, { paddingBottom: 40 + insets.bottom }]}
+    >
       <Pressable style={[styles.proRow, { backgroundColor: colors.surfaceAlt }]} onPress={() => router.push('/pro')}>
         <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text }}>
           {isPro ? `⭐ ${t('pro.unlockedLabel')}` : `⭐ ${t('pro.title')}`}
