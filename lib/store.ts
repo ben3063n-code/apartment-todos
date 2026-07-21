@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Haptics from 'expo-haptics';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -311,6 +312,7 @@ export const useStore = create<Store>()(
         const done = !current.done;
 
         if (done && current.notificationId) cancelReminder(current.notificationId);
+        if (done) Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
 
         set((state) => ({
           todos: state.todos.map((todo) =>
