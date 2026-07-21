@@ -30,3 +30,19 @@ export function showInfo(title: string, message: string) {
 
   Alert.alert(title, message);
 }
+
+export function showUpsell(message: string, onViewPro: () => void) {
+  const title = i18n.t('pro.upsellTitle');
+  if (Platform.OS === 'web') {
+    const text = `${title}\n\n${message}`;
+    if (window.confirm(text)) {
+      onViewPro();
+    }
+    return;
+  }
+
+  Alert.alert(title, message, [
+    { text: i18n.t('common.cancel'), style: 'cancel' },
+    { text: i18n.t('pro.viewProButton'), onPress: onViewPro },
+  ]);
+}

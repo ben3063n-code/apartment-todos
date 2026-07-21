@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { showUpsell } from '../lib/confirm';
 import { editTodoHref } from '../lib/routes';
 import { useStore } from '../lib/store';
 import { useAppTheme } from '../lib/useAppTheme';
@@ -27,11 +28,20 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
   const { t } = useTranslation();
   const folders = useStore((state) => state.folders);
   const todos = useStore((state) => state.todos);
-  const toggleInNow = useStore((state) => state.toggleInNow);
+  const attemptToggleInNow = useStore((state) => state.attemptToggleInNow);
   const showTodayBanner = useStore((state) => state.showTodayBanner);
   const sortField = useStore((state) => state.allTodosSortField);
   const setSortField = useStore((state) => state.setAllTodosSortField);
   const { recentlyCompletedIds, handleToggleDone } = useRecentlyCompleted();
+
+  const handleToggleInNow = (id: string) => {
+    const result = attemptToggleInNow(id);
+    if (result === 'limit') {
+      showUpsell(t('pro.upsellFocusLimit'), () => router.push('/pro'));
+    } else if (result === 'monthly') {
+      showUpsell(t('pro.upsellFocusMonthly'), () => router.push('/pro'));
+    }
+  };
 
   const folder = folderId !== 'all' ? folders.find((f) => f.id === folderId) : null;
 
@@ -124,7 +134,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
               <DraggableTodoRow
                 todo={item}
                 onToggle={() => handleToggleDone(item.id, item.done)}
-                onToggleNow={() => toggleInNow(item.id)}
+                onToggleNow={() => handleToggleInNow(item.id)}
                 onPress={() => router.push(editTodoHref(item.id))}
                 folderLabel={item.folderId ? folderLabelById.get(item.folderId) : undefined}
                 justCompleted={recentlyCompletedIds.has(item.id)}
@@ -144,7 +154,7 @@ export function FolderDetailPane({ folderId, sidebarVisible, onToggleSidebar, on
               key={todo.id}
               todo={todo}
               onToggle={() => handleToggleDone(todo.id, todo.done)}
-              onToggleNow={() => toggleInNow(todo.id)}
+              onToggleNow={() => handleToggleInNow(todo.id)}
               onPress={() => router.push(editTodoHref(todo.id))}
               justCompleted={recentlyCompletedIds.has(todo.id)}
             />

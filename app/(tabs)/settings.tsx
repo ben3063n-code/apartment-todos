@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { BackupControls } from '../../components/BackupControls';
-import { showInfo } from '../../lib/confirm';
+import { showInfo, showUpsell } from '../../lib/confirm';
 import { LANGUAGE_NAMES } from '../../lib/i18n/languageNames';
 import {
   ACCENT_COLORS,
@@ -39,10 +39,18 @@ export default function SettingsScreen() {
   const setCompletionMark = useStore((state) => state.setCompletionMark);
   const fadeOutDuration = useStore((state) => state.fadeOutDuration);
   const setFadeOutDuration = useStore((state) => state.setFadeOutDuration);
+  const isPro = useStore((state) => state.isPro);
 
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.container}>
-      <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>{t('settings.appearanceLabel')}</Text>
+      <Pressable style={[styles.proRow, { backgroundColor: colors.surfaceAlt }]} onPress={() => router.push('/pro')}>
+        <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text }}>
+          {isPro ? `⭐ ${t('pro.unlockedLabel')}` : `⭐ ${t('pro.title')}`}
+        </Text>
+        <Text style={{ color: colors.textMuted }}>›</Text>
+      </Pressable>
+
+      <Text style={[styles.sectionLabel, { color: colors.textMuted, marginTop: 20 }]}>{t('settings.appearanceLabel')}</Text>
       <View style={[styles.segmented, { borderColor: colors.border }]}>
         {THEME_OPTIONS.map((option, index) => (
           <Pressable
@@ -89,17 +97,24 @@ export default function SettingsScreen() {
         {ACCENT_COLORS.map((key) => {
           const swatch = ACCENT_SWATCH_PREVIEW[key];
           const selected = accentColor === key;
+          const locked = !isPro && key !== 'monochrome';
           return (
             <Pressable
               key={key}
-              onPress={() => setAccentColor(key)}
+              onPress={() =>
+                locked
+                  ? showUpsell(t('pro.upsellColor'), () => router.push('/pro'))
+                  : setAccentColor(key)
+              }
               style={[
                 styles.swatch,
                 { backgroundColor: swatch },
                 selected && { borderColor: colors.text, borderWidth: 2 },
+                locked && styles.swatchLocked,
               ]}
             >
               {selected && <Text style={{ color: '#fff', fontSize: 13 }}>✓</Text>}
+              {locked && <Text style={{ fontSize: 12 }}>🔒</Text>}
             </Pressable>
           );
         })}
@@ -217,4 +232,13 @@ const styles = StyleSheet.create({
   fadeSliderRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingBottom: 11 },
   fadeSlider: { flex: 1, height: 28 },
   labelWithInfo: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  proRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    borderRadius: 10,
+  },
+  swatchLocked: { opacity: 0.5 },
 });

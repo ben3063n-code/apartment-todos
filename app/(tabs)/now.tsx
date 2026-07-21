@@ -5,6 +5,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { PriorityBadge } from '../../components/PriorityBadge';
 import { TodoRow } from '../../components/TodoRow';
+import { showUpsell } from '../../lib/confirm';
 import { formatDuration } from '../../lib/formatDuration';
 import type { Priority, Todo } from '../../lib/models';
 import { editTodoHref } from '../../lib/routes';
@@ -17,9 +18,19 @@ export default function NowScreen() {
   const { t } = useTranslation();
   const todos = useStore((state) => state.todos);
   const folders = useStore((state) => state.folders);
-  const toggleInNow = useStore((state) => state.toggleInNow);
+  const attemptToggleInNow = useStore((state) => state.attemptToggleInNow);
   const toggleDone = useStore((state) => state.toggleDone);
   const endFocusSession = useStore((state) => state.endFocusSession);
+  const isPro = useStore((state) => state.isPro);
+
+  const handleToggleInNow = (id: string) => {
+    const result = attemptToggleInNow(id);
+    if (result === 'limit') {
+      showUpsell(t('pro.upsellFocusLimit'), () => router.push('/pro'));
+    } else if (result === 'monthly') {
+      showUpsell(t('pro.upsellFocusMonthly'), () => router.push('/pro'));
+    }
+  };
 
   const folderLabelById = useMemo(() => {
     const map = new Map<string, string>();
@@ -48,7 +59,7 @@ export default function NowScreen() {
     );
   }
 
-  const accentColor = focus?.priority ? colors.priority[focus.priority] : colors.textMuted;
+  const accentColor = focus?.priority && isPro ? colors.priority[focus.priority] : colors.textMuted;
   const totalMinutes = activeQueue.reduce((sum, item) => sum + (item.estimatedMinutes ?? 0), 0);
 
   return (
@@ -67,7 +78,7 @@ export default function NowScreen() {
           estimatedMinutes={focus.estimatedMinutes}
           accentColor={accentColor}
           onPress={() => router.push(editTodoHref(focus.id))}
-          onToggleNow={() => toggleInNow(focus.id)}
+          onToggleNow={() => handleToggleInNow(focus.id)}
           onToggleDone={() => toggleDone(focus.id)}
         />
       )}
@@ -84,7 +95,7 @@ export default function NowScreen() {
           <TodoRow
             todo={item}
             onToggle={() => toggleDone(item.id)}
-            onToggleNow={() => toggleInNow(item.id)}
+            onToggleNow={() => handleToggleInNow(item.id)}
             onPress={() => router.push(editTodoHref(item.id))}
             folderLabel={item.folderId ? folderLabelById.get(item.folderId) : undefined}
           />
@@ -97,6 +108,7 @@ export default function NowScreen() {
 function TimeBudgetBar({ queue, totalMinutes }: { queue: Todo[]; totalMinutes: number }) {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
+  const isPro = useStore((state) => state.isPro);
 
   const segments = queue.filter((todo) => todo.estimatedMinutes);
   const withoutEstimate = queue.length - segments.length;
@@ -118,7 +130,7 @@ function TimeBudgetBar({ queue, totalMinutes }: { queue: Todo[]; totalMinutes: n
               style={[
                 {
                   flex: todo.estimatedMinutes ?? 1,
-                  backgroundColor: todo.priority ? colors.priority[todo.priority] : noPriorityShade,
+                  backgroundColor: todo.priority && isPro ? colors.priority[todo.priority] : noPriorityShade,
                 },
                 index < segments.length - 1 && styles.budgetSegmentDivider,
               ]}

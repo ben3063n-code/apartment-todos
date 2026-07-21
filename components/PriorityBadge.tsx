@@ -2,12 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { Priority } from '../lib/models';
+import { useStore } from '../lib/store';
 import { useAppTheme } from '../lib/useAppTheme';
 
 export function PriorityBadge({ priority }: { priority: Priority | null }) {
   const { colors } = useAppTheme();
   const { t } = useTranslation();
-  if (!priority) return null;
+  const isPro = useStore((state) => state.isPro);
+  if (!priority || !isPro) return null;
   const color = colors.priority[priority];
 
   return (

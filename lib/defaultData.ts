@@ -2,20 +2,22 @@ import type { Language } from './models';
 
 export const ONBOARDING_FOLDER_EMOJI = '🚀';
 
-type FocusDemoTask = { folderIndex: number; title: string; minutes: number; priority: 1 | 2 | 3 | 4 | 5 };
+type FocusDemoTask = { title: string; minutes: number; priority: 1 | 2 | 3 | 4 | 5 };
 type Subfolder = { name: string; todo: string };
 
 type DefaultDataSet = {
-  folderNames: string[];
+  householdFolderName: string;
+  listFolderName: string;
   onboardingFolderName: string;
   onboardingTodos: string[];
   focusDemoTasks: FocusDemoTask[];
-  kitchenSubfolders: Subfolder[];
+  householdSubfolders: Subfolder[];
 };
 
 const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
   de: {
-    folderNames: ['Küche', 'Wohnzimmer', 'Universität', 'Badezimmer', 'Beruf', 'Privat', 'Ideen', 'Bücherliste'],
+    householdFolderName: 'Haushalt',
+    listFolderName: 'Ideen',
     onboardingFolderName: 'Erste Schritte',
     onboardingTodos: [
       'Tippe auf einen Ordner links, um seine Aufgaben zu sehen',
@@ -26,18 +28,18 @@ const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
       'Diesen Ordner kannst du jederzeit löschen',
     ],
     focusDemoTasks: [
-      { folderIndex: 0, title: 'Küche putzen', minutes: 30, priority: 2 },
-      { folderIndex: 1, title: 'Wohnzimmer aufräumen', minutes: 20, priority: 4 },
-      { folderIndex: 3, title: 'Bad putzen', minutes: 25, priority: 3 },
+      { title: 'Küche putzen', minutes: 30, priority: 2 },
+      { title: 'Wohnzimmer aufräumen', minutes: 20, priority: 4 },
+      { title: 'Bad putzen', minutes: 25, priority: 3 },
     ],
-    kitchenSubfolders: [
+    householdSubfolders: [
       { name: 'Putzen', todo: 'Boden wischen' },
-      { name: 'Einkaufen', todo: 'Einkaufsliste schreiben' },
       { name: 'Rezepte', todo: 'Lieblingsrezept speichern' },
     ],
   },
   en: {
-    folderNames: ['Kitchen', 'Living Room', 'University', 'Bathroom', 'Work', 'Private', 'Ideas', 'Book List'],
+    householdFolderName: 'Household',
+    listFolderName: 'Ideas',
     onboardingFolderName: 'Getting Started',
     onboardingTodos: [
       'Tap a folder on the left to see its tasks',
@@ -48,18 +50,18 @@ const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
       'You can delete this folder anytime',
     ],
     focusDemoTasks: [
-      { folderIndex: 0, title: 'Clean the kitchen', minutes: 30, priority: 2 },
-      { folderIndex: 1, title: 'Tidy the living room', minutes: 20, priority: 4 },
-      { folderIndex: 3, title: 'Clean the bathroom', minutes: 25, priority: 3 },
+      { title: 'Clean the kitchen', minutes: 30, priority: 2 },
+      { title: 'Tidy the living room', minutes: 20, priority: 4 },
+      { title: 'Clean the bathroom', minutes: 25, priority: 3 },
     ],
-    kitchenSubfolders: [
+    householdSubfolders: [
       { name: 'Cleaning', todo: 'Mop the floor' },
-      { name: 'Shopping', todo: 'Write the shopping list' },
       { name: 'Recipes', todo: 'Save a favorite recipe' },
     ],
   },
   fr: {
-    folderNames: ['Cuisine', 'Salon', 'Université', 'Salle de bain', 'Travail', 'Privé', 'Idées', 'Liste de livres'],
+    householdFolderName: 'Maison',
+    listFolderName: 'Idées',
     onboardingFolderName: 'Premiers pas',
     onboardingTodos: [
       'Touche un dossier à gauche pour voir ses tâches',
@@ -70,18 +72,18 @@ const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
       'Tu peux supprimer ce dossier à tout moment',
     ],
     focusDemoTasks: [
-      { folderIndex: 0, title: 'Nettoyer la cuisine', minutes: 30, priority: 2 },
-      { folderIndex: 1, title: 'Ranger le salon', minutes: 20, priority: 4 },
-      { folderIndex: 3, title: 'Nettoyer la salle de bain', minutes: 25, priority: 3 },
+      { title: 'Nettoyer la cuisine', minutes: 30, priority: 2 },
+      { title: 'Ranger le salon', minutes: 20, priority: 4 },
+      { title: 'Nettoyer la salle de bain', minutes: 25, priority: 3 },
     ],
-    kitchenSubfolders: [
+    householdSubfolders: [
       { name: 'Ménage', todo: 'Laver le sol' },
-      { name: 'Courses', todo: 'Écrire la liste de courses' },
       { name: 'Recettes', todo: 'Enregistrer une recette préférée' },
     ],
   },
   it: {
-    folderNames: ['Cucina', 'Soggiorno', 'Università', 'Bagno', 'Lavoro', 'Privato', 'Idee', 'Lista libri'],
+    householdFolderName: 'Casa',
+    listFolderName: 'Idee',
     onboardingFolderName: 'Per iniziare',
     onboardingTodos: [
       'Tocca una cartella a sinistra per vedere le sue attività',
@@ -92,18 +94,18 @@ const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
       'Puoi eliminare questa cartella in qualsiasi momento',
     ],
     focusDemoTasks: [
-      { folderIndex: 0, title: 'Pulire la cucina', minutes: 30, priority: 2 },
-      { folderIndex: 1, title: 'Riordinare il soggiorno', minutes: 20, priority: 4 },
-      { folderIndex: 3, title: 'Pulire il bagno', minutes: 25, priority: 3 },
+      { title: 'Pulire la cucina', minutes: 30, priority: 2 },
+      { title: 'Riordinare il soggiorno', minutes: 20, priority: 4 },
+      { title: 'Pulire il bagno', minutes: 25, priority: 3 },
     ],
-    kitchenSubfolders: [
+    householdSubfolders: [
       { name: 'Pulizie', todo: 'Lavare il pavimento' },
-      { name: 'Spesa', todo: 'Scrivere la lista della spesa' },
       { name: 'Ricette', todo: 'Salvare una ricetta preferita' },
     ],
   },
   zh: {
-    folderNames: ['厨房', '客厅', '大学', '浴室', '工作', '私人', '点子', '书单'],
+    householdFolderName: '家务',
+    listFolderName: '点子',
     onboardingFolderName: '快速上手',
     onboardingTodos: [
       '点击左侧的文件夹查看其中的任务',
@@ -114,18 +116,18 @@ const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
       '你可以随时删除这个文件夹',
     ],
     focusDemoTasks: [
-      { folderIndex: 0, title: '打扫厨房', minutes: 30, priority: 2 },
-      { folderIndex: 1, title: '整理客厅', minutes: 20, priority: 4 },
-      { folderIndex: 3, title: '打扫浴室', minutes: 25, priority: 3 },
+      { title: '打扫厨房', minutes: 30, priority: 2 },
+      { title: '整理客厅', minutes: 20, priority: 4 },
+      { title: '打扫浴室', minutes: 25, priority: 3 },
     ],
-    kitchenSubfolders: [
+    householdSubfolders: [
       { name: '打扫', todo: '拖地' },
-      { name: '购物', todo: '写购物清单' },
       { name: '食谱', todo: '保存一个喜欢的食谱' },
     ],
   },
   ja: {
-    folderNames: ['キッチン', 'リビング', '大学', 'バスルーム', '仕事', 'プライベート', 'アイデア', 'ブックリスト'],
+    householdFolderName: '家事',
+    listFolderName: 'アイデア',
     onboardingFolderName: 'はじめに',
     onboardingTodos: [
       '左のフォルダをタップすると、そのタスクが表示されます',
@@ -136,13 +138,12 @@ const DATA: Record<Exclude<Language, 'auto'>, DefaultDataSet> = {
       'このフォルダはいつでも削除できます',
     ],
     focusDemoTasks: [
-      { folderIndex: 0, title: 'キッチンを掃除する', minutes: 30, priority: 2 },
-      { folderIndex: 1, title: 'リビングを片付ける', minutes: 20, priority: 4 },
-      { folderIndex: 3, title: 'バスルームを掃除する', minutes: 25, priority: 3 },
+      { title: 'キッチンを掃除する', minutes: 30, priority: 2 },
+      { title: 'リビングを片付ける', minutes: 20, priority: 4 },
+      { title: 'バスルームを掃除する', minutes: 25, priority: 3 },
     ],
-    kitchenSubfolders: [
+    householdSubfolders: [
       { name: '掃除', todo: '床を拭く' },
-      { name: '買い物', todo: '買い物リストを書く' },
       { name: 'レシピ', todo: 'お気に入りのレシピを保存する' },
     ],
   },

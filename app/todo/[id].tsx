@@ -8,7 +8,7 @@ import { DurationPicker } from '../../components/DurationPicker';
 import { FolderPicker } from '../../components/FolderPicker';
 import { PriorityPicker } from '../../components/PriorityPicker';
 import { RecurrencePicker } from '../../components/RecurrencePicker';
-import { confirmDestructive } from '../../lib/confirm';
+import { confirmDestructive, showUpsell } from '../../lib/confirm';
 import type { Priority, Recurrence } from '../../lib/models';
 import { cancelReminder, ensureNotificationPermission, scheduleReminder } from '../../lib/notifications';
 import { paramToFolderId } from '../../lib/routes';
@@ -27,6 +27,7 @@ export default function TodoModal() {
   const updateTodo = useStore((state) => state.updateTodo);
   const deleteTodo = useStore((state) => state.deleteTodo);
   const restoreTodo = useStore((state) => state.restoreTodo);
+  const isPro = useStore((state) => state.isPro);
   const { showUndo } = useUndoToast();
 
   const isNew = params.id === 'new';
@@ -47,7 +48,7 @@ export default function TodoModal() {
   const canSave = useMemo(() => title.trim().length > 0, [title]);
 
   const handleToggleReminder = async (next: boolean) => {
-    if (!dueDate) return;
+    if (!dueDate || !isPro) return;
     if (!next) {
       setReminderEnabled(false);
       return;
@@ -119,7 +120,12 @@ export default function TodoModal() {
       <FolderPicker value={folderId} onChange={setFolderId} allowTopLevel topLevelLabel={t('todo.unassignedOption')} />
 
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.priorityLabel')}</Text>
-      <PriorityPicker value={priority} onChange={setPriority} />
+      <PriorityPicker
+        value={priority}
+        onChange={setPriority}
+        locked={!isPro}
+        onLockedPress={() => showUpsell(t('pro.upsellPriority'), () => router.push('/pro'))}
+      />
 
       <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.estimatedTimeLabel')}</Text>
       <DurationPicker value={estimatedMinutes} onChange={setEstimatedMinutes} />
@@ -159,17 +165,29 @@ export default function TodoModal() {
       <View style={styles.reminderRow}>
         <View style={styles.reminderLabelCol}>
           <Text style={[styles.label, { color: colors.textMuted, marginTop: 0 }]}>{t('todo.reminderLabel')}</Text>
-          {!dueDate && (
-            <Text style={[styles.hint, { color: colors.textMuted }]}>{t('todo.reminderNeedsDueDate')}</Text>
+          {!isPro ? (
+            <Text style={[styles.hint, { color: colors.textMuted }]}>{t('pro.reminderProOnly')}</Text>
+          ) : (
+            !dueDate && <Text style={[styles.hint, { color: colors.textMuted }]}>{t('todo.reminderNeedsDueDate')}</Text>
           )}
           {reminderDenied && (
             <Text style={[styles.hint, { color: colors.danger }]}>{t('todo.reminderDenied')}</Text>
           )}
         </View>
-        <Switch value={reminderEnabled} onValueChange={handleToggleReminder} disabled={!dueDate} />
+        <Pressable
+          onPress={() => !isPro && showUpsell(t('pro.upsellReminder'), () => router.push('/pro'))}
+          disabled={isPro}
+        >
+          <Switch
+            value={reminderEnabled}
+            onValueChange={handleToggleReminder}
+            disabled={!dueDate || !isPro}
+            pointerEvents={isPro ? 'auto' : 'none'}
+          />
+        </Pressable>
       </View>
 
-      {reminderEnabled && dueDate && (
+      {reminderEnabled && dueDate && isPro && (
         <>
           <Text style={[styles.label, { color: colors.textMuted }]}>{t('todo.reminderTimeLabel')}</Text>
           <TextInput

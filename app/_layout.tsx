@@ -75,6 +75,15 @@ export default function RootLayout() {
                 headerTintColor: colors.text,
               }}
             />
+            <Stack.Screen
+              name="pro"
+              options={{
+                headerShown: true,
+                title: t('pro.title'),
+                headerStyle: { backgroundColor: colors.surface },
+                headerTintColor: colors.text,
+              }}
+            />
           </Stack>
           <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
         </UndoToastProvider>

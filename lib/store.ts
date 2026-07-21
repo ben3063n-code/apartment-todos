@@ -7,6 +7,7 @@ import { suggestFolderEmoji } from './folderEmoji';
 import { createId } from './id';
 import { resolveLanguage } from './i18n/resolveLanguage';
 import { cancelReminder, scheduleReminder } from './notifications';
+import { currentMonthKey, FREE_FOCUS_TASK_LIMIT } from './pro';
 import type {
   AccentColor,
   CompletionMark,
@@ -65,8 +66,12 @@ type Store = {
   hasHydrated: boolean;
   hasSeededDefaults: boolean;
   onboardingFolderId: string | null;
+  isPro: boolean;
+  focusSessionEndedMonth: string | null;
   setHasHydrated: (value: boolean) => void;
   seedDefaultData: () => void;
+  setIsPro: (value: boolean) => void;
+  attemptToggleInNow: (id: string) => 'ok' | 'limit' | 'monthly';
 
   addFolder: (name: string, parentId: string | null, emoji: string, kind?: FolderKind) => string;
   updateFolder: (id: string, patch: Partial<Pick<Folder, 'name' | 'emoji' | 'kind' | 'parentId'>>) => void;
@@ -114,15 +119,14 @@ export const useStore = create<Store>()(
       hasHydrated: false,
       hasSeededDefaults: false,
       onboardingFolderId: null,
+      isPro: false,
+      focusSessionEndedMonth: null,
       setHasHydrated: (value) => set({ hasHydrated: value }),
+      setIsPro: (value) => set({ isPro: value }),
 
       seedDefaultData: () => {
         const resolvedLanguage = resolveLanguage(get().language);
         const data = getDefaultData(resolvedLanguage);
-        const listFolderIndexes = new Set([6, 7]); // Ideas, Book List
-        const defaultFolderIds = data.folderNames.map((name, index) =>
-          get().addFolder(name, null, suggestFolderEmoji(name), listFolderIndexes.has(index) ? 'list' : 'tasks')
-        );
 
         const onboardingId = get().addFolder(data.onboardingFolderName, null, ONBOARDING_FOLDER_EMOJI);
         for (const title of data.onboardingTodos) {
@@ -140,10 +144,11 @@ export const useStore = create<Store>()(
           });
         }
 
+        const householdId = get().addFolder(data.householdFolderName, null, suggestFolderEmoji(data.householdFolderName), 'tasks');
         for (const task of data.focusDemoTasks) {
           const todoId = get().addTodo({
             title: task.title,
-            folderId: defaultFolderIds[task.folderIndex],
+            folderId: householdId,
             priority: task.priority,
             dueDate: null,
             dueTime: null,
@@ -156,9 +161,8 @@ export const useStore = create<Store>()(
           get().toggleInNow(todoId);
         }
 
-        const kitchenFolderId = defaultFolderIds[0];
-        for (const sub of data.kitchenSubfolders) {
-          const subfolderId = get().addFolder(sub.name, kitchenFolderId, suggestFolderEmoji(sub.name));
+        for (const sub of data.householdSubfolders) {
+          const subfolderId = get().addFolder(sub.name, householdId, suggestFolderEmoji(sub.name));
           get().addTodo({
             title: sub.todo,
             folderId: subfolderId,
@@ -172,6 +176,8 @@ export const useStore = create<Store>()(
             estimatedMinutes: null,
           });
         }
+
+        get().addFolder(data.listFolderName, null, suggestFolderEmoji(data.listFolderName), 'list');
 
         set({ hasSeededDefaults: true, onboardingFolderId: onboardingId });
       },
@@ -356,6 +362,24 @@ export const useStore = create<Store>()(
         }));
       },
 
+      attemptToggleInNow: (id) => {
+        const state = get();
+        const todo = state.todos.find((t) => t.id === id);
+        if (!todo) return 'ok';
+
+        if (state.isPro || todo.inNowList) {
+          state.toggleInNow(id);
+          return 'ok';
+        }
+
+        const currentFocusCount = state.todos.filter((t) => t.inNowList && !t.deletedAt).length;
+        if (currentFocusCount >= FREE_FOCUS_TASK_LIMIT) return 'limit';
+        if (currentFocusCount === 0 && state.focusSessionEndedMonth === currentMonthKey()) return 'monthly';
+
+        state.toggleInNow(id);
+        return 'ok';
+      },
+
       deleteTodo: (id) => {
         const todo = get().todos.find((t) => t.id === id);
         if (todo?.notificationId) cancelReminder(todo.notificationId);
@@ -390,6 +414,7 @@ export const useStore = create<Store>()(
       endFocusSession: () => {
         set((state) => ({
           todos: state.todos.map((todo) => (todo.inNowList ? { ...todo, inNowList: false } : todo)),
+          focusSessionEndedMonth: currentMonthKey(),
         }));
       },
 
@@ -420,6 +445,8 @@ export const useStore = create<Store>()(
         showTodayBanner: state.showTodayBanner,
         hasSeededDefaults: state.hasSeededDefaults,
         onboardingFolderId: state.onboardingFolderId,
+        isPro: state.isPro,
+        focusSessionEndedMonth: state.focusSessionEndedMonth,
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);

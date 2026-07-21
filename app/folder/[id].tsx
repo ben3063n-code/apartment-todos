@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { FolderPicker } from '../../components/FolderPicker';
-import { confirmDestructive } from '../../lib/confirm';
+import { confirmDestructive, showUpsell } from '../../lib/confirm';
 import { suggestFolderEmoji } from '../../lib/folderEmoji';
 import { FOLDER_KINDS, type FolderKind } from '../../lib/models';
+import { FREE_FOLDER_LIMIT } from '../../lib/pro';
 import { paramToFolderId } from '../../lib/routes';
 import { useStore } from '../../lib/store';
 import { useAppTheme } from '../../lib/useAppTheme';
@@ -25,6 +26,7 @@ export default function FolderModal() {
   const deleteFolder = useStore((state) => state.deleteFolder);
   const restoreFolder = useStore((state) => state.restoreFolder);
   const getDescendantFolderIds = useStore((state) => state.getDescendantFolderIds);
+  const isPro = useStore((state) => state.isPro);
   const { showUndo } = useUndoToast();
 
   const isNew = params.id === 'new';
@@ -47,6 +49,15 @@ export default function FolderModal() {
 
   const handleSave = () => {
     if (!canSave) return;
+
+    if (isNew && !isPro) {
+      const activeFolderCount = folders.filter((f) => !f.deletedAt).length;
+      if (activeFolderCount >= FREE_FOLDER_LIMIT) {
+        showUpsell(t('pro.upsellFolderLimit'), () => router.push('/pro'));
+        return;
+      }
+    }
+
     const finalEmoji = emoji.trim() || suggestFolderEmoji(name);
     if (isNew) {
       addFolder(name.trim(), parentId, finalEmoji, kind);
