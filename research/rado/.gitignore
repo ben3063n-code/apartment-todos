@@ -1,0 +1,9 @@
+# CNFs and DRAT proofs are regenerable and large; hashes are recorded in the
+# result records instead.
+cnf/*.cnf
+proofs/*.drat
+encoder_b/target/
+bin/kissat
+bin/cadical
+bin/drat-trim
+__pycache__/
