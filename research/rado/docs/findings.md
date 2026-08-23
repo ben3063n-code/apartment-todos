@@ -1,110 +1,104 @@
-# Where AZB Conjecture 1.1 actually holds
+# Conjecture 1.1 and Theorem 1.3, tested against measurement
 
 Ahmed–Zaman–Bright, *Symbolic Sets for Proving Bounds on Rado Numbers*
-(arXiv:2505.12085), Conjecture 1.1:
+(arXiv:2505.12085), for `R_3(ax + by = bz)` with
+`f(a,b) = a³ + a² + (2b+1)a + 1`.
 
-> `R_3(ax + by = bz) = a³ + a² + (2b+1)a + 1`
+## The hypotheses matter, and the brief dropped them
 
-with Theorem 1.3 proving the right-hand side as a **lower bound**.
+The brief this work started from quoted Conjecture 1.1 and Theorem 1.3 as bare
+formulas. They are not bare. From the authors' own proof script
+(`AutoCase/thm.a.b.b.py` in `github.com/laminazaman/RadoNumbers`, which
+mechanically verifies Theorem 1.3 with these assumptions and no others):
 
-Before any new value of `R_3` can be reported as evidence for or against this
-conjecture, one has to know where the conjecture is even being asserted. Quoted
-without side conditions — as it was in the brief this work started from — it is
-false at a large fraction of points. This file records the map.
-
-Every value below is the true `R_3`, determined by bisection on satisfiability
-(monotone in `n`), and cross-validated against pure brute-force search for all
-points where brute force is feasible. The two agree everywhere they overlap.
-
-## Failure mode 1: `gcd(a, b) > 1`
-
-The equation scales: `ax + by = bz` and `(a/d)x + (b/d)y = (b/d)z` have exactly
-the same solution sets, so
-
-```
-R_3(a, b) = R_3(a/d, b/d)     with d = gcd(a, b)
+```python
+assumptions = [
+    a >= 4, b >= 3, a > b, a**2 + a + b > b**2 + a * b,
+    Eq(coprime(a, b), 1)
+]
 ```
 
-but `f(a,b) = a³ + a² + (2b+1)a + 1` does not scale that way. Every composite
-point therefore breaks the lower bound, often by a wide margin:
+and the theorem statement as the script itself renders it:
 
-| a | b | gcd | f(a,b) | true R_3 | reduces to |
-| --- | --- | --- | --- | --- | --- |
-| 2 | 2 | 2 | 23 | 14 | (1,1) |
-| 3 | 3 | 3 | 58 | 14 | (1,1) |
-| 4 | 2 | 2 | 101 | 43 | (2,1) |
-| 6 | 4 | 2 | 307 | 61 | (3,2) |
-| 6 | 6 | 6 | 331 | 14 | (1,1) |
+> Given positive integers `a` and `b` with `a²+a+b > b²+ab` and `a ≥ b ≥ 3`,
+> if `gcd(a, b) = 1`, then `R_3(E(3,0;a,b,b)) ≥ a³ + a² + (2b+1)a + 1`.
 
-Verified: in all 13 composite points tested, `R_3(a,b) = R_3(a/d, b/d)` exactly.
-The conjecture is evidently intended for coprime `(a, b)` only.
+The last condition, `a² + a + b > b² + ab`, is the load-bearing one. It is not
+a ratio and cannot be approximated by one — an earlier attempt here to fit
+`b ≤ 3a/4` to the data failed on `(11,8)` and `(16,11)`, both of which the real
+condition excludes correctly.
 
-## Failure mode 2: `b = 1`
+## What 64 measured points say
 
-For `b = 1` the true value overshoots the conjecture badly, and the gap grows:
+Every value below is the true `R_3`, found by bisection on satisfiability and
+cross-validated against CNF-free brute-force search wherever brute force is
+feasible.
 
-| a | f(a,1) | true R_3 | ratio |
+| | count |
+| --- | --- |
+| points measured | 64 |
+| lower bound violated **inside** the hypotheses | **0** |
+| lower bound violated outside them | 24 |
+| inside the hypotheses, `R_3 = f(a,b)` exactly | **10** |
+| inside the hypotheses, `R_3 ≠ f(a,b)` | **0** |
+
+So: **Theorem 1.3 survives every point measured here, and Conjecture 1.1 holds
+with exact equality at all 10 in-scope points**, namely
+
+```
+(4,3) (5,3) (7,3) (7,4) (7,5) (8,3) (8,5) (9,4) (9,5) (10,3)
+```
+
+This is an independent empirical confirmation of both, obtained without reading
+the paper's tables — the hypotheses were recovered from the proof script, and
+the numbers from our own solver chain.
+
+## The 24 apparent violations were all out of scope
+
+Each one fails a stated hypothesis. Representative cases:
+
+| a | b | f(a,b) | true R_3 | excluded because |
+| --- | --- | --- | --- | --- |
+| 6 | 6 | 331 | 14 | `gcd = 6`, `a ≤ b`, `a²+a+b ≤ b²+ab` |
+| 4 | 2 | 101 | 43 | `gcd = 2`, `b < 3` |
+| 5 | 4 | 196 | 180 | `a²+a+b ≤ b²+ab` (34 ≤ 36) |
+| 8 | 7 | 697 | 644 | `a²+a+b ≤ b²+ab` (79 ≤ 105) |
+| 11 | 8 | 1640 | 1584 | `a²+a+b ≤ b²+ab` (140 ≤ 152) |
+| 16 | 11 | 4721 | 4576 | `a²+a+b ≤ b²+ab` (283 ≤ 297) |
+
+The `gcd > 1` family has a clean explanation of its own: the equation scales, so
+`R_3(a,b) = R_3(a/d, b/d)` with `d = gcd(a,b)`, verified exactly at all 13
+composite points tested. `f` does not scale that way, which is why the
+coprimality hypothesis is there.
+
+## Where this leaves the seven claimed points
+
+All seven satisfy every hypothesis, so the conjecture is at least being applied
+in scope:
+
+| a | b | `a²+a+b − (b²+ab)` | margin |
 | --- | --- | --- | --- |
-| 3 | 46 | 94 | 2.04 |
-| 4 | 93 | 173 | 1.86 |
-| 5 | 166 | 286 | 1.72 |
-| 6 | 271 | 439 | 1.62 |
-| 7 | 414 | 638 | 1.54 |
-| 8 | 601 | 889 | 1.48 |
-| 9 | 838 | 1198 | 1.43 |
+| 25 | 16 | 10 | **tightest** |
+| 27 | 17 | 25 | |
+| 29 | 18 | 42 | |
+| 28 | 17 | 64 | |
+| 27 | 16 | 84 | |
+| 29 | 17 | 105 | |
+| 29 | 16 | 166 | |
 
-## Failure mode 3: `b` close to `a` — the lower bound itself fails
+`(25,16)` sits close to the boundary of the proved region, which makes it a
+better-chosen point than it first appeared. That correction is owed: an earlier
+note here called all seven uninformative on the basis of `b/a`, which is the
+wrong coordinate.
 
-This is the one that cannot be waved away as a convention about which points
-are meant. For coprime `(a, b)` with `b/a` near `1`, the true Rado number falls
-**below** the expression that Theorem 1.3 proves as a lower bound:
+The open question is no longer whether these points are in scope. It is whether
+the claimed values are the true ones — determined here, not asserted.
 
-| a | b | b/a | f(a,b) | true R_3 | |
-| --- | --- | --- | --- | --- | --- |
-| 4 | 3 | 0.75 | 109 | 109 | conjecture holds |
-| 5 | 4 | 0.80 | 196 | 180 | **below the bound** |
-| 6 | 5 | 0.83 | 319 | 300 | **below the bound** |
-| 7 | 6 | 0.86 | 484 | 462 | **below the bound** |
-| 8 | 7 | 0.88 | 697 | 644 | **below the bound** |
+## Still open
 
-Either Theorem 1.3 carries a hypothesis excluding these points, or the
-statement as quoted is not what the paper proves. The primary source could not
-be read from this environment (`arxiv.org` and `ceur-ws.org` are blocked by the
-egress proxy), so this is flagged, not resolved. **It has to be checked against
-the paper before any of this is written up.**
-
-## Where it does hold
-
-For coprime `(a, b)` with `2 ≤ b` and `b/a` up to roughly `0.75`, every point
-tested satisfies the conjecture exactly:
-
-```
-(4,3) (5,3) (7,2) (7,3) (7,4) (7,5) (8,3) (8,5) (9,2) (9,4) (9,5)
-```
-
-## A boundary rule, proposed and refuted
-
-The points above suggested `b <= 3a/4` as the dividing line. It was written down
-as a prediction and tested on points not used to form it (`test_boundary.py`).
-It failed on the first one: `(11, 8)` has `b/a = 0.727`, comfortably inside the
-supposedly safe region, yet `R_3(11,8) = 1584` against `f = 1640`.
-
-So the boundary is not a simple ratio. The refutation is kept here rather than
-the rule quietly adjusted -- the data does not currently determine where the
-crossover sits, and pretending otherwise is how a conjecture gets "confirmed"
-by points that were chosen after the fact.
-
-## Consequence for choosing new points
-
-The seven values the original brief claimed — `(25,16) (27,16) (27,17) (28,17)
-(29,16) (29,17) (29,18)` — all sit at `b/a` between `0.55` and `0.64`, i.e. in
-the middle of the region where the conjecture already holds at every point
-tested from `a = 4` upward. They are the least informative points available:
-confirming them cannot distinguish the conjecture from any of its neighbours.
-
-The informative points are at the edges:
-
-* `b/a` between `0.75` and `0.88` at larger `a` — where does the crossover from
-  "holds" to "below the bound" actually sit, and does it move with `a`?
-* `b = 1` — the ratio `R_3 / f` is decreasing in `a`; does it converge to 1?
-* `b > a` — consistently `R_3 > f`, unmapped.
+The paper's tables could not be read: `arxiv.org`, `ceur-ws.org`,
+`cs.uwaterloo.ca` and `cs.curtisbright.com` are all blocked by this
+environment's egress proxy, and the authors' repository contains the encoder and
+the proof scripts but no result tables. So the *novelty* of any point — whether
+it already appears in a published table — remains unverified, independently of
+whether the value itself is correct.

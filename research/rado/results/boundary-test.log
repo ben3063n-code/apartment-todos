@@ -1,0 +1,11 @@
+  a   b   b/a   3a/4  predicted   f(a,b)      R_3     actual  verdict
+ 11   8  0.73   8.25      HOLDS     1640     1584    R_3 < f  HYPOTHESIS REFUTED
+ 13  10  0.77   9.75    R_3 < f     2640     2530    R_3 < f  as predicted
+ 15  11  0.73  11.25      HOLDS     3946     3795    R_3 < f  HYPOTHESIS REFUTED
+ 14  11  0.79  10.50    R_3 < f     3263     3113    R_3 < f  as predicted
+ 16  11  0.69  12.00      HOLDS     4721     4576    R_3 < f  HYPOTHESIS REFUTED
+ 17  13  0.76  12.75    R_3 < f     5662     5447    R_3 < f  as predicted
+ 11   9  0.82   8.25    R_3 < f     1662     1575    R_3 < f  as predicted
+ 13   9  0.69   9.75      HOLDS     2614     2574    R_3 < f  HYPOTHESIS REFUTED
+
+8 out-of-sample predictions, 4 wrong
