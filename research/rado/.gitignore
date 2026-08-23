@@ -7,3 +7,4 @@ bin/kissat
 bin/cadical
 bin/drat-trim
 __pycache__/
+bin/encode_b

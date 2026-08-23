@@ -82,6 +82,18 @@ tested satisfies the conjecture exactly:
 (4,3) (5,3) (7,2) (7,3) (7,4) (7,5) (8,3) (8,5) (9,2) (9,4) (9,5)
 ```
 
+## A boundary rule, proposed and refuted
+
+The points above suggested `b <= 3a/4` as the dividing line. It was written down
+as a prediction and tested on points not used to form it (`test_boundary.py`).
+It failed on the first one: `(11, 8)` has `b/a = 0.727`, comfortably inside the
+supposedly safe region, yet `R_3(11,8) = 1584` against `f = 1640`.
+
+So the boundary is not a simple ratio. The refutation is kept here rather than
+the rule quietly adjusted -- the data does not currently determine where the
+crossover sits, and pretending otherwise is how a conjecture gets "confirmed"
+by points that were chosen after the fact.
+
 ## Consequence for choosing new points
 
 The seven values the original brief claimed — `(25,16) (27,16) (27,17) (28,17)
