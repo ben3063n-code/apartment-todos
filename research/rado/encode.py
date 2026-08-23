@@ -80,20 +80,55 @@ def encode(a: int, b: int, n: int, symmetry: bool = True):
     return 3 * n, clauses
 
 
+def iter_clauses(a, b, n, symmetry=True):
+    """Same clauses as encode(), yielded one at a time.
+
+    encode() materialises every clause in a list, which costs several GB at
+    n ~ 20000 and got a run killed. Streaming keeps memory flat; the clause
+    count needed for the DIMACS header comes from count_triples() instead of
+    len().
+    """
+    if a < 1 or b < 1 or n < 1:
+        raise ValueError("a, b, n must all be >= 1")
+    for i in range(1, n + 1):
+        yield [var(i, 0), var(i, 1), var(i, 2)]
+    for i in range(1, n + 1):
+        yield [-var(i, 0), -var(i, 1)]
+        yield [-var(i, 0), -var(i, 2)]
+        yield [-var(i, 1), -var(i, 2)]
+    for (x, y, z) in solution_triples(a, b, n):
+        for c in range(3):
+            yield sorted({-var(x, c), -var(y, c), -var(z, c)})
+    if symmetry:
+        yield [-var(1, 1)]
+        yield [-var(1, 2)]
+
+
+def clause_count(a, b, n, symmetry=True):
+    """Closed form for the number of clauses iter_clauses() will yield."""
+    return 3 * count_triples(a, b, n) + 4 * n + (2 if symmetry else 0)
+
+
 def write_dimacs(path, a, b, n, symmetry=True):
-    n_vars, clauses = encode(a, b, n, symmetry)
+    n_vars = 3 * n
+    n_clauses = clause_count(a, b, n, symmetry)
     h = hashlib.sha256()
+    written = 0
     with open(path, "w") as f:
-        header = f"p cnf {n_vars} {len(clauses)}\n"
+        header = f"p cnf {n_vars} {n_clauses}\n"
         f.write(f"c 3-colour Rado, equation {a}x + {b}y = {b}z, n = {n}\n")
         f.write(f"c encoder A (encode.py), symmetry_breaking={symmetry}\n")
         f.write(header)
         h.update(header.encode())
-        for cl in clauses:
+        for cl in iter_clauses(a, b, n, symmetry):
             line = " ".join(map(str, cl)) + " 0\n"
             f.write(line)
             h.update(line.encode())
-    return n_vars, len(clauses), h.hexdigest()
+            written += 1
+    if written != n_clauses:
+        raise RuntimeError(
+            f"header promised {n_clauses} clauses but {written} were written")
+    return n_vars, n_clauses, h.hexdigest()
 
 
 def main():

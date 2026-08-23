@@ -66,7 +66,12 @@ def verify_lrat(cnf, lrat, timeout=None):
     """cake_lpr is a checker whose kernel is verified in CakeML, so this does
     not rest on drat-trim -- itself unverified C -- being correct."""
     t0 = time.time()
-    p = subprocess.run([os.path.join(BIN, "cake_lpr"), cnf, lrat],
+    # cake_lpr's heap must be sized for the proof; the default is far too
+    # small for the LRAT files these instances produce (100s of MB), and it
+    # fails rather than growing.
+    p = subprocess.run([os.path.join(BIN, "cake_lpr"),
+                        "--CML_HEAP_SIZE=8192", "--CML_STACK_SIZE=2048",
+                        cnf, lrat],
                        capture_output=True, text=True, timeout=timeout)
     return ("s VERIFIED UNSAT" in p.stdout), round(time.time() - t0, 2)
 
