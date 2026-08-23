@@ -52,17 +52,30 @@ def model_to_colouring(model, n):
     return colour
 
 
-def verify_drat(cnf, proof, timeout=None):
+def verify_drat(cnf, proof, lrat=None, timeout=None):
+    """drat-trim checks the DRAT proof and, given -L, emits an LRAT proof."""
+    cmd = [os.path.join(BIN, "drat-trim"), cnf, proof]
+    if lrat:
+        cmd += ["-L", lrat]
     t0 = time.time()
-    p = subprocess.run([os.path.join(BIN, "drat-trim"), cnf, proof],
-                       capture_output=True, text=True, timeout=timeout)
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
     return ("s VERIFIED" in p.stdout), round(time.time() - t0, 2)
+
+
+def verify_lrat(cnf, lrat, timeout=None):
+    """cake_lpr is a checker whose kernel is verified in CakeML, so this does
+    not rest on drat-trim -- itself unverified C -- being correct."""
+    t0 = time.time()
+    p = subprocess.run([os.path.join(BIN, "cake_lpr"), cnf, lrat],
+                       capture_output=True, text=True, timeout=timeout)
+    return ("s VERIFIED UNSAT" in p.stdout), round(time.time() - t0, 2)
 
 
 def episode(a, b, n, keep=False, timeout=None):
     tag = f"a{a}-b{b}-n{n}"
     cnf = os.path.join(HERE, "cnf", f"{tag}.cnf")
     proof = os.path.join(HERE, "proofs", f"{tag}.drat")
+    lrat = os.path.join(HERE, "proofs", f"{tag}.lrat")
     nv, nc, cnf_hash = write_dimacs(cnf, a, b, n)
 
     rec = {
@@ -70,7 +83,7 @@ def episode(a, b, n, keep=False, timeout=None):
         "a": a, "b": b, "n": n,
         "equation": f"{a}x + {b}y = {b}z",
         "vars": nv, "clauses": nc, "cnf_sha256": cnf_hash,
-        "solvers": {}, "witness": None, "drat": None,
+        "solvers": {}, "witness": None, "drat": None, "lrat": None,
     }
 
     v_k, model_k, t_k = run_solver("kissat", cnf, timeout=timeout)
@@ -79,11 +92,24 @@ def episode(a, b, n, keep=False, timeout=None):
     if v_k == "UNSAT":
         v_c, _, t_c = run_solver("cadical", cnf, proof=proof, timeout=timeout)
         rec["solvers"]["cadical-3.0.1"] = {"verdict": v_c, "seconds": t_c}
+        if v_c == "UNSAT" and not os.path.exists(proof):
+            # Never let a missing certificate pass as a quiet None: an UNSAT
+            # verdict without a checked proof is exactly what this harness
+            # exists to prevent.
+            raise RuntimeError(
+                f"cadical reported UNSAT for {tag} but wrote no proof at {proof}")
         if v_c == "UNSAT" and os.path.exists(proof):
-            ok, t_d = verify_drat(cnf, proof, timeout=timeout)
+            ok, t_d = verify_drat(cnf, proof, lrat=lrat, timeout=timeout)
             rec["drat"] = {"verified": ok, "seconds": t_d,
                            "bytes": os.path.getsize(proof),
                            "sha256": sha256_file(proof)}
+            if ok and os.path.exists(lrat):
+                ok_l, t_l = verify_lrat(cnf, lrat, timeout=timeout)
+                rec["lrat"] = {"verified_by_cake_lpr": ok_l, "seconds": t_l,
+                               "bytes": os.path.getsize(lrat),
+                               "sha256": sha256_file(lrat)}
+                if not keep:
+                    os.remove(lrat)
             if not keep:
                 os.remove(proof)
     else:
@@ -122,7 +148,8 @@ def main():
               f"cadical={s['cadical-3.0.1']['seconds']}s "
               f"vars={rec['vars']} clauses={rec['clauses']} "
               + (f"witness={rec['witness']['independently_checked']}" if rec["witness"]
-                 else f"drat={rec['drat']['verified'] if rec['drat'] else None}"))
+                 else f"drat={rec['drat']['verified'] if rec['drat'] else None} "
+                      f"cake_lpr={rec['lrat']['verified_by_cake_lpr'] if rec['lrat'] else None}"))
 
 
 if __name__ == "__main__":
