@@ -102,3 +102,30 @@ environment's egress proxy, and the authors' repository contains the encoder and
 the proof scripts but no result tables. So the *novelty* of any point — whether
 it already appears in a published table — remains unverified, independently of
 whether the value itself is correct.
+
+## Verification status of the eight determinations
+
+All eight (seven claimed points plus the (29,3) control) are determined with
+both polarities: SAT at `R-1` with an independently re-checked witness, UNSAT
+at `R` with a drat-trim-verified DRAT proof, kissat and cadical agreeing on
+every verdict. Every claimed value reproduces exactly.
+
+The formally verified checker `cake_lpr` reaches only part of the way. Its
+memory need scales with the LRAT proof, and this machine has 15 GB with no
+swap available:
+
+| (a,b) | LRAT | cake_lpr |
+| --- | --- | --- |
+| (25,16) | 149 MB | verified |
+| (27,16) | 210 MB | verified |
+| (27,17) | 212 MB | verified |
+| (28,17) | 253 MB | verified |
+| (29,3) | 283 MB | heap exhausted |
+| (29,16) | 298 MB | heap exhausted |
+| (29,17) | 298 MB | heap exhausted |
+| (29,18) | 301 MB | heap exhausted |
+
+So four of eight carry a proof checked by a verified checker. The other four
+rest on drat-trim, which is unverified C. They are **well evidenced but not
+formally verified**, and are not described otherwise anywhere here. Clearing
+them needs a machine with more memory, not more work.

@@ -1,0 +1,26 @@
+### (27,16) n=21304  17:16:14
+  lrat 210M
+  heap=10500MB stack=3500MB -> s VERIFIED UNSAT
+### (27,17) n=21358  17:20:43
+  lrat 212M
+  heap=10500MB stack=3500MB -> s VERIFIED UNSAT
+### (28,17) n=23717  17:25:51
+  lrat 253M
+  heap=10500MB stack=3500MB -> s VERIFIED UNSAT
+### (29,3) n=25434  17:31:23
+  lrat 283M
+  heap=10500MB stack=3500MB -> CakeML heap space exhausted.
+  heap=9000MB stack=5000MB -> CakeML heap space exhausted.
+### (29,16) n=26188  17:39:59
+  lrat 298M
+  heap=10500MB stack=3500MB -> CakeML heap space exhausted.
+  heap=9000MB stack=5000MB -> CakeML heap space exhausted.
+### (29,17) n=26246  17:49:31
+  lrat 298M
+  heap=10500MB stack=3500MB -> CakeML heap space exhausted.
+  heap=9000MB stack=5000MB -> CakeML heap space exhausted.
+### (29,18) n=26304  17:58:13
+  lrat 301M
+  heap=10500MB stack=3500MB -> CakeML heap space exhausted.
+  heap=9000MB stack=5000MB -> CakeML heap space exhausted.
+### done 18:08:23
