@@ -127,5 +127,17 @@ swap available:
 
 So four of eight carry a proof checked by a verified checker. The other four
 rest on drat-trim, which is unverified C. They are **well evidenced but not
-formally verified**, and are not described otherwise anywhere here. Clearing
-them needs a machine with more memory, not more work.
+formally verified**, and are not described otherwise anywhere here.
+
+A final attempt pushed the split to `heap=11500/stack=3000` and
+`heap=12500/stack=2200`. Both produced no output at all rather than an error:
+at 14.5 GB of a 15 GB box the kernel kills the process before cake_lpr can
+report. The working configuration (`10500/3500`, 14 GB) is the most this
+machine allows, and it clears 253 MB of LRAT but not 283 MB.
+
+Extrapolating the heap need linearly from the four that pass, 301 MB wants
+roughly 12500 MB of heap plus the 3000+ MB of stack these proofs need — about
+16 GB for cake_lpr alone. **A machine with 32 GB would clear all four.** This
+is a hardware limit, not an open question: the proofs exist, drat-trim accepts
+them, and nothing about them is in doubt except the trustworthiness of the
+checker that accepted them.

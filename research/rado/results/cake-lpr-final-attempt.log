@@ -1,0 +1,17 @@
+### (29,3) n=25434  18:09:28
+  lrat 283M
+  heap=11500MB stack=3000MB -> 
+  heap=12500MB stack=2200MB -> 
+### (29,16) n=26188  18:18:05
+  lrat 298M
+  heap=11500MB stack=3000MB -> 
+  heap=12500MB stack=2200MB -> 
+### (29,17) n=26246  18:26:43
+  lrat 298M
+  heap=11500MB stack=3000MB -> 
+  heap=12500MB stack=2200MB -> 
+### (29,18) n=26304  18:34:30
+  lrat 301M
+  heap=11500MB stack=3000MB -> 
+  heap=12500MB stack=2200MB -> 
+### done 18:43:04
